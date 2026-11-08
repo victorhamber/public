@@ -275,6 +275,63 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     }
   }
 
+  // WAHA returns a CDN/proxy URL; Postiz uploadSimple cannot reach the
+  // internal WAHA host, so we download here and hand back a data URL.
+  async groupPictureDataUrl(chatId: string): Promise<string> {
+    const encoded = encodeURIComponent(chatId);
+    const paths = [
+      `/api/${SESSION}/groups/${encoded}/picture?refresh=false`,
+      `/api/${SESSION}/chats/${encoded}/picture?refresh=false`,
+    ];
+
+    for (const path of paths) {
+      try {
+        const pic = await this.wahaJson<{ url?: string | null }>(path);
+        if (!pic?.url) {
+          continue;
+        }
+        const dataUrl = await this.downloadAsDataUrl(pic.url);
+        if (dataUrl) {
+          return dataUrl;
+        }
+      } catch {
+        // try next endpoint
+      }
+    }
+    return '';
+  }
+
+  private async downloadAsDataUrl(url: string): Promise<string> {
+    try {
+      const base = this.baseUrl();
+      let res: Response;
+      if (url.startsWith(base) || url.startsWith('/')) {
+        const path = url.startsWith(base) ? url.slice(base.length) : url;
+        res = await this.waha(path);
+      } else {
+        res = await fetch(url);
+      }
+      if (!res.ok) {
+        return '';
+      }
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (!buf.length) {
+        return '';
+      }
+      const header = (res.headers.get('content-type') || '')
+        .split(';')[0]
+        .trim()
+        .toLowerCase();
+      const mime =
+        header.startsWith('image/') && header !== 'image/*'
+          ? header
+          : 'image/jpeg';
+      return `data:${mime};base64,${buf.toString('base64')}`;
+    } catch {
+      return '';
+    }
+  }
+
   async authenticate(params: {
     code: string;
     codeVerifier: string;
@@ -296,13 +353,15 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
       return 'Group not found. Refresh the list and try again.';
     }
 
+    const picture = await this.groupPictureDataUrl(chatId);
+
     return {
       id: chatId,
       name: group?.name || chatId,
       accessToken: chatId,
       refreshToken: '',
       expiresIn: dayjs().add(200, 'year').unix() - dayjs().unix(),
-      picture: '',
+      picture,
       username: session.me?.pushName || session.me?.id || 'whatsapp',
     };
   }

@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-08 — WhatsApp no discriminator de post + foto via data-url
+- Contexto: salvar publicação com canal WhatsApp devolvia toast genérico; avatars vinham `/no-picture.jpg`.
+- Decisão: registrar `WhatsappDto` em `all.providers.settings`. Baixar foto do WAHA como data-url no `authenticate` e oferecer `sync-pictures`.
+- Alternativas descartadas: passar URL do WAHA para `uploadSimple` (SSRF/API key); deixar `__type` fora da lista.
+- Consequência: `mapTypeToPost` aceita `whatsapp`. Grupos novos e backfill ganham avatar quando o WAHA tiver `url`.
+
 ## 2026-11-08 — Repositório e motor do WAHA
 - Contexto: o GitHub vazio é `https://github.com/victorhamber/public.git`. O Deskcomm mostra como o WAHA sobe.
 - Decisão: fork da tag `v2.25.3` nesse repositório. WAHA `devlikeapro/waha:latest-2026.7.2`, motor NOWEB, dashboard desligado, sessões retomadas no volume.

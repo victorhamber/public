@@ -4,7 +4,7 @@ Propósito: sessão WhatsApp deste Postiz, acessível só pela rede interna.
 
 ## API pública
 - Cliente: `whatsapp.provider.ts`.
-- Operações: abrir sessão `postiz`, QR, status, listar grupos, enviar texto/imagem/vídeo com menções.
+- Operações: abrir sessão `postiz`, QR, status, listar grupos, foto do grupo (`/groups/{id}/picture`), enviar texto/imagem/vídeo com menções.
 
 ## Depende de / Usado por
 - Depende: volumes `waha-sessions` e `waha-media`, chave em hash no container.

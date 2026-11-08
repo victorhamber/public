@@ -589,6 +589,50 @@ export class IntegrationsController {
     return { connected, errors };
   }
 
+  // Backfill avatars for groups connected before picture fetch existed.
+  @Post('/whatsapp/sync-pictures')
+  @CheckPolicies([AuthorizationActions.Create, Sections.CHANNEL])
+  async whatsappSyncPictures(@GetOrgFromRequest() org: Organization) {
+    const provider = new WhatsappProvider();
+    const list = await this._integrationService.getIntegrationsList(org.id);
+    const targets = list.filter(
+      (item) =>
+        item.providerIdentifier === 'whatsapp' &&
+        (!item.picture || item.picture.includes('no-picture'))
+    );
+
+    const updated: string[] = [];
+    const errors: string[] = [];
+
+    for (const item of targets) {
+      try {
+        const picture = await provider.groupPictureDataUrl(item.internalId);
+        if (!picture) {
+          continue;
+        }
+        await this._integrationService.createOrUpdateIntegration(
+          undefined,
+          false,
+          org.id,
+          item.name,
+          picture,
+          'social',
+          item.internalId,
+          'whatsapp',
+          item.token,
+          item.refreshToken || '',
+          0,
+          item.profile || undefined
+        );
+        updated.push(item.id);
+      } catch (err: any) {
+        errors.push(`${item.internalId}: ${err?.message || 'failed'}`);
+      }
+    }
+
+    return { updated: updated.length, ids: updated, errors, skipped: targets.length - updated.length };
+  }
+
   @Post('/moltbook/register')
   async moltbookRegister(@Body() body: { name: string; description: string }) {
     try {

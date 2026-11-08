@@ -6,9 +6,12 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 - `GET /integrations/whatsapp/qr` — status da sessão e QR em data-url.
 - `GET /integrations/whatsapp/groups` — grupos da sessão `postiz`.
 - `POST /integrations/whatsapp/connect-groups` — conecta vários grupos de uma vez.
+- `POST /integrations/whatsapp/sync-pictures` — preenche avatar dos grupos sem foto.
 - Provedor `whatsapp`: autentica com o id do grupo; publica texto/imagem/vídeo.
+- `WhatsappDto` registrado em `all.providers.settings` (sem isso, salvar post quebra com `__type`).
 - UI: busca por nome, checkbox multi-select, grupos já conectados marcados.
 - Envio: menção invisível ligada por padrão; `maxConcurrentJob=1` + `WHATSAPP_SEND_DELAY_MS`.
+- Foto: `GET .../groups/{id}/picture` (fallback chats) baixada como data-url no `authenticate`.
 
 ## Depende de / Usado por
 - Depende: serviço WAHA interno (`WAHA_API_BASE_URL`, `WAHA_API_KEY`), teto `WHATSAPP_MENTION_CAP`.

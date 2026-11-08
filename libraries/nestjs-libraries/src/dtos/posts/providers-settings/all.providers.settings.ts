@@ -25,6 +25,7 @@ import { SkoolDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-setting
 import { WhopDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/whop.dto';
 import { MeweDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/mewe.dto';
 import { TumblrDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/tumblr.dto';
+import { WhatsappDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/whatsapp.dto';
 
 export type ProviderExtension<T extends string, M> = { __type: T } & M;
 export type AllProvidersSettings =
@@ -56,6 +57,7 @@ export type AllProvidersSettings =
   | ProviderExtension<'mastodon', None>
   | ProviderExtension<'bluesky', None>
   | ProviderExtension<'telegram', None>
+  | ProviderExtension<'whatsapp', WhatsappDto>
   | ProviderExtension<'nostr', None>
   | ProviderExtension<'moltbook', MoltbookDto>
   | ProviderExtension<'vk', None>
@@ -96,6 +98,7 @@ export const allProviders = (setEmpty?: any) => {
     { value: setEmpty, name: 'mastodon' },
     { value: setEmpty, name: 'bluesky' },
     { value: setEmpty, name: 'telegram' },
+    { value: WhatsappDto, name: 'whatsapp' },
     { value: setEmpty, name: 'nostr' },
     { value: setEmpty, name: 'vk' },
     { value: MoltbookDto, name: 'moltbook' },

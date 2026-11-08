@@ -598,9 +598,12 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
 
         if (!validResponse.ok) {
           if (validResponse.status !== 402) {
-            const { message } = await validResponse.json().catch(() => ({}));
+            const body = await validResponse.json().catch(() => ({}));
+            const message = Array.isArray(body?.message)
+              ? body.message.join(' ')
+              : body?.message;
             toaster.show(
-              typeof message === 'string'
+              typeof message === 'string' && message
                 ? message
                 : t('post_save_failed', 'Could not save the post'),
               'warning'
@@ -770,9 +773,12 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
 
             if (!response.ok) {
               if (response.status !== 402) {
-                const { message } = await response.json().catch(() => ({}));
+                const body = await response.json().catch(() => ({}));
+                const message = Array.isArray(body?.message)
+                  ? body.message.join(' ')
+                  : body?.message;
                 toaster.show(
-                  typeof message === 'string'
+                  typeof message === 'string' && message
                     ? message
                     : t('post_save_failed', 'Could not save the post'),
                   'warning'
