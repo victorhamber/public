@@ -8,11 +8,13 @@ import { useFetch } from '@gitroom/helpers/utils/custom.fetch';
 import { continueProviderList } from '@gitroom/frontend/components/new-launch/providers/continue-provider/list';
 import { newDayjs } from '@gitroom/frontend/components/layout/set.timezone';
 import { useModals } from '@gitroom/frontend/components/layout/new-modal';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 export const Null: FC<{
   onSave: (data: any) => Promise<void>;
   existingId: string[];
 }> = () => null;
 export const ContinueProvider: FC = () => {
+  const t = useT();
   const { mutate } = useSWRConfig();
   const fetch = useFetch();
   const searchParams = useSearchParams();
@@ -125,7 +127,7 @@ const ContinueModal: FC<{
 
   useEffect(() => {
     modals.openModal({
-      title: 'Configure Channel',
+      title: t('configure_channel', 'Configure Channel'),
       children: (close) => (
         <ModalContent
           {...props}

@@ -256,7 +256,7 @@
 - signature.tsx [70L]
 
 ## apps/frontend/src/components/admin/
-- admin-errors.component.tsx [412L] — safeParse(), usePlatformsList(), useErrorsList()
+- admin-errors.component.tsx [418L] — safeParse(), usePlatformsList(), useErrorsList()
 - admin-stats.component.tsx [380L] — isoDaysAgo(), today(), startOfWeek(), startOfMonth(), useStats()
 
 ## apps/frontend/src/components/agents/
@@ -309,7 +309,7 @@
 - finish.trial.tsx [137L]
 - first.billing.component.tsx [454L] — FirstBillingComponent(), useBillingFeatures()
 - lifetime.deal.tsx [197L] — LifetimeDeal()
-- main.billing.component.tsx [1052L] — useLoadCredits(), useRenewal()
+- main.billing.component.tsx [1062L] — useLoadCredits(), useRenewal()
 - use.payment.action.tsx [25L] Consuming the PaymentIntent client_secret with the publishable key is — usePaymentAction()
 
 ## apps/frontend/src/components/developer/
@@ -319,7 +319,7 @@
 ## apps/frontend/src/components/launches/
 - add.provider.component.tsx [776L] — useAddProvider()
 - ai.image.tsx [197L]
-- ai.video.tsx [260L]
+- ai.video.tsx [264L]
 - bot.picture.tsx [107L]
 - calendar.context.tsx [440L] — getDateRange(), useNow(), useCalendar()
 - calendar.tsx [1649L] — updateDayjsLocale(), convertTimeFormatBasedOnLocality(), usePostActions(), slotDate(), DayView(), WeekView(), MonthView(), ListView(), Calendar(), CopyDebug(), Duplicate(), Preview(), +3
@@ -392,11 +392,11 @@
 ## apps/frontend/src/components/layout/
 - announcement.banner.tsx [151L] — useAnnouncements()
 - chatbase.component.tsx [159L] eslint-disable-next-line @typescript-eslint/no-explicit-any
-- check.payment.tsx [127L]
+- check.payment.tsx [130L]
 - chrome.extension.component.tsx [31L] — ChromeExtensionComponent()
 - click.outside.tsx [28L] — useClickOutside()
-- continue.provider.tsx [143L]
-- drop.files.tsx [35L]
+- continue.provider.tsx [145L]
+- drop.files.tsx [41L]
 - dubAnalytics.tsx [26L] — DubAnalytics(), useDubClickId()
 - facebook.component.tsx [23L] — FacebookComponent()
 - gtm.component.tsx [58L] eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -404,19 +404,19 @@
 - impersonate.tsx [1148L] — useCharges(), useCouponInfo(), ManageBilling(), Subscription(), AddAnnouncement(), AddTeamMember(), ViewErrors(), ViewStats(), ImportDebugPost(), SwitchUser(), Impersonate()
 - invoices.component.tsx [54L]
 - language.component.tsx [157L] Register required locales — getCountryCodeForFlag(), ChangeLanguageComponent(), LanguageComponent()
-- layout.context.tsx [134L] eslint-disable-next-line react/no-children-prop — LayoutContext(), setCookie(), LayoutContextInner()
+- layout.context.tsx [138L] eslint-disable-next-line react/no-children-prop — LayoutContext(), setCookie(), LayoutContextInner()
 - loading.tsx [44L]
 - logout.component.tsx [65L]
 - mode.component.tsx [60L] — ModeComponent()
-- new-modal.tsx [453L] — useModals(), showModalEmitter(), useDecisionModal()
+- new-modal.tsx [460L] — useModals(), showModalEmitter(), useDecisionModal()
 - new.subscription.tsx [15L]
 - organization.selector.tsx [113L]
-- pre-condition.component.tsx [48L] Please note this payment is final and not refundable.
+- pre-condition.component.tsx [50L] Please note this payment is final and not refundable.
 - redirect.tsx [18L]
 - sentry.component.tsx [21L] Always render children - don't block the app
 - set.timezone.tsx [353L] the plugin below wraps methods of these, so they are registered first — formatter(), exactOffset(), cachedOffset(), offsetAt(), wallToInstant(), browserTimezone(), isTimezone(), applyTimezone(), getTimezone(), setUserTimezone(), newDayjs(), fromUtc(), +1
 - settings.component.tsx [288L] — SettingsComponent()
-- streak.component.tsx [55L]
+- streak.component.tsx [64L]
 - support.tsx [49L] — Support()
 - title.tsx [15L] — Title()
 - top.menu.tsx [296L] — useMenuItem()
@@ -434,7 +434,7 @@
 - bold.text.tsx [108L]
 - bullets.component.tsx [38L]
 - delay.component.tsx [155L]
-- dummy.code.component.tsx [49L]
+- dummy.code.component.tsx [51L]
 - editor.tsx [1383L] — insertImages()
 - heading.component.tsx [96L]
 - manage.modal.tsx [1405L]
@@ -624,7 +624,8 @@
 - sentry.feedback.component.tsx [54L]
 
 ## apps/frontend/src/components/notifications/
-- notification.component.tsx [209L] notifications are plain text, the urls in them become short links — replaceLinks(), useNotificationsList(), NotificationOpenComponent(), NotificationComponent()
+- notification.component.tsx [210L] notifications are plain text, the urls in them become short links — replaceLinks(), useNotificationsList(), NotificationOpenComponent(), NotificationComponent()
+- translate.notification.ts [87L] Maps known English in-app notification templates to Portuguese. — translateNotificationContent()
 
 ## apps/frontend/src/components/oauth/
 - authorize.component.tsx [278L]
@@ -640,7 +641,7 @@
 - render.analytics.tsx [255L]
 
 ## apps/frontend/src/components/plugs/
-- plug.tsx [278L] — convertBackRegex(), Plug()
+- plug.tsx [281L] — convertBackRegex(), Plug()
 - plugs.context.ts [49L] — usePlugs()
 - plugs.tsx [193L] — Plugs()
 
@@ -664,7 +665,7 @@
 - public.component.tsx [934L] Remote clients can't set headers, they get a URL to paste (hint = where) — getMcpOauthUrl(), CopyButton(), McpSection(), CliSection(), PublicApiContent(), PublicComponent()
 
 ## apps/frontend/src/components/sets/
-- sets.tsx [213L]
+- sets.tsx [222L]
 
 ## apps/frontend/src/components/settings/
 - apps.component.tsx [45L]
@@ -683,15 +684,15 @@
 
 ## apps/frontend/src/components/third-parties/
 - slider.component.tsx [72L]
-- third-party.component.tsx [154L] — ThirdPartyComponent()
+- third-party.component.tsx [162L] — ThirdPartyComponent()
 - third-party.function.tsx [89L] — useThirdPartySubmit(), useThirdPartyFunction(), useThirdPartyFunctionSWR()
-- third-party.list.component.tsx [165L]
+- third-party.list.component.tsx [169L]
 - third-party.media-library.tsx [292L]
 - third-party.media.tsx [228L] — useThirdParty()
 - third-party.wrapper.tsx [16L]
 
 ## apps/frontend/src/components/third-parties/providers/
-- heygen.provider.tsx [248L] — HeygenProviderComponent()
+- heygen.provider.tsx [250L] — HeygenProviderComponent()
 
 ## apps/frontend/src/components/ui/
 - bottom.sheet.component.tsx [96L]
@@ -768,7 +769,7 @@
 - post.workflow.v1.0.9.ts [673L] — proxyTaskQueue(), proxyCommentTaskQueue(), proxyCheckTaskQueue(), proxyMutationTaskQueue(), postWorkflowV109()
 - post.workflow.v1.1.0.ts [679L] — proxyTaskQueue(), proxyCommentTaskQueue(), proxyCheckTaskQueue(), proxyMutationTaskQueue(), postWorkflowV110()
 - post.workflow.v1.1.1.ts [725L] The publishing activities heartbeat every 15s from their first line, so a — proxyTaskQueue(), proxyCommentTaskQueue(), proxyCheckTaskQueue(), proxyMutationTaskQueue(), postWorkflowV111()
-- post.workflow.v1.1.2.ts [729L] The publishing activities heartbeat every 15s (withHeartbeat sends its first — proxyTaskQueue(), proxyCommentTaskQueue(), proxyCheckTaskQueue(), proxyMutationTaskQueue(), postWorkflowV112()
+- post.workflow.v1.1.2.ts [731L] The publishing activities heartbeat every 15s (withHeartbeat sends its first — proxyTaskQueue(), proxyCommentTaskQueue(), proxyCheckTaskQueue(), proxyMutationTaskQueue(), postWorkflowV112()
 
 ## apps/sdk/
 - .babelrc [6L]

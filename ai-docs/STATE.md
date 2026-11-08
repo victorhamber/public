@@ -2,11 +2,11 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- Fix save (`whatsapp` no `allProviders`) + avatar de grupo + sync-pictures; deploy.
+- Tradução PT: deploy do fork (UI default PT, notificações/e-mails/servidor).
 
 ## Próximos passos
-1. Deploy e chamar `POST /integrations/whatsapp/sync-pictures`.
-2. Confirmar schedule com canal WhatsApp e avatars na lista.
+1. Confirmar sininho, streak e toasts em português após o deploy.
+2. Reportar qualquer tela ainda em inglês.
 
 ## Bloqueios / dúvidas
 - Nenhum.

@@ -34,10 +34,10 @@ export const LifetimeDeal = () => {
     ).json();
     if (success) {
       mutate('/user/self');
-      toast.show('Successfully claimed the code');
+      toast.show(t('successfully_claimed_code', 'Successfully claimed the code'));
       fireEvents('lifetime_claimed');
     } else {
-      toast.show('Code already claimed or invalid code', 'warning');
+      toast.show(t('code_already_claimed_or_invalid', 'Code already claimed or invalid code'), 'warning');
     }
     setCode('');
   }, [code]);

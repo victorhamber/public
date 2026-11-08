@@ -4,6 +4,7 @@ import {
   useThirdPartyFunctionSWR,
   useThirdPartySubmit,
 } from '@gitroom/frontend/components/third-parties/third-party.function';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 import { useThirdParty } from '@gitroom/frontend/components/third-parties/third-party.media';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { Textarea } from '@gitroom/react/form/textarea';
@@ -101,6 +102,7 @@ const HeygenProviderComponent = () => {
   const { data } = useThirdPartyFunctionSWR('LOAD_ONCE', 'avatars');
   const { data: voices } = useThirdPartyFunctionSWR('LOAD_ONCE', 'voices');
   const send = useThirdPartySubmit();
+  const t = useT();
   const [hideVoiceGenerator, setHideVoiceGenerator] = useState(false);
   const [voiceLoading, setVoiceLoading] = useState(false);
 
@@ -127,7 +129,7 @@ const HeygenProviderComponent = () => {
 
   const generateVoice = useCallback(async () => {
     if (
-      !(await deleteDialog('Are you sure? it will delete the current text'))
+      !(await deleteDialog(t('delete_current_text_confirm', 'Are you sure? it will delete the current text')))
     ) {
       return;
     }

@@ -140,7 +140,7 @@
 
 ## libraries/nestjs-libraries/src/database/prisma/integrations/
 - integration.repository.ts [1020L] — IntegrationRepository
-- integration.service.ts [718L] — IntegrationService
+- integration.service.ts [720L] — IntegrationService
 
 ## libraries/nestjs-libraries/src/database/prisma/media/
 - media.repository.ts [175L] — MediaRepository
@@ -528,7 +528,7 @@
 - get.transation.service.client.ts [18L] — useT(), useTranslationSettings()
 - get.translation.service.backend.ts [13L] — getT()
 - i18n.config.ts [22L]
-- i18next.ts [29L]
+- i18next.ts [32L] Fork default: Portuguese when no cookie/header yet.
 - translated-label.tsx [41L] TranslatedLabel is a wrapper component that translates labels in form components — TranslatedLabel()
 
 ## libraries/react-shared-libraries/src/translation/locales/ar/
@@ -541,7 +541,7 @@
 - translation.json [900L]
 
 ## libraries/react-shared-libraries/src/translation/locales/en/
-- translation.json [902L]
+- translation.json [943L]
 
 ## libraries/react-shared-libraries/src/translation/locales/es/
 - translation.json [900L]
@@ -565,7 +565,7 @@
 - translation.json [900L]
 
 ## libraries/react-shared-libraries/src/translation/locales/pt/
-- translation.json [900L]
+- translation.json [943L]
 
 ## libraries/react-shared-libraries/src/translation/locales/ru/
 - translation.json [900L]

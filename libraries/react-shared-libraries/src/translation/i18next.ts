@@ -16,11 +16,14 @@ i18next
   .init({
     supportedLngs: languages,
     fallbackLng,
-    lng: undefined,
+    // Fork default: Portuguese when no cookie/header yet.
+    lng: runsOnServerSide ? fallbackLng : undefined,
     fallbackNS: defaultNS,
     defaultNS,
     detection: {
-      order: ['cookie', 'header'],
+      order: ['cookie', 'header', 'navigator'],
+      lookupCookie: 'i18next',
+      caches: ['cookie'],
     },
     preload: runsOnServerSide ? languages : [],
   });

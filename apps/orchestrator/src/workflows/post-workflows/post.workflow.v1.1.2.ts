@@ -191,8 +191,8 @@ export async function postWorkflowV112({
   if (post.integration?.refreshNeeded) {
     await inAppNotification(
       post.organizationId,
-      `We couldn't post to ${post.integration?.providerIdentifier} for ${post?.integration?.name}`,
-      `We couldn't post to ${post.integration?.providerIdentifier} for ${post?.integration?.name} because you need to reconnect it. Please enable it and try again.`,
+      `Não foi possível publicar no ${post.integration?.providerIdentifier} (${post?.integration?.name})`,
+      `Não foi possível publicar no ${post.integration?.providerIdentifier} (${post?.integration?.name}) porque é preciso reconectar o canal. Ative e tente de novo.`,
       true,
       false,
       'info'
@@ -211,8 +211,8 @@ export async function postWorkflowV112({
   if (post.integration?.disabled) {
     await inAppNotification(
       post.organizationId,
-      `We couldn't post to ${post.integration?.providerIdentifier} for ${post?.integration?.name}`,
-      `We couldn't post to ${post.integration?.providerIdentifier} for ${post?.integration?.name} because it's disabled. Please enable it and try again.`,
+      `Não foi possível publicar no ${post.integration?.providerIdentifier} (${post?.integration?.name})`,
+      `Não foi possível publicar no ${post.integration?.providerIdentifier} (${post?.integration?.name}) porque o canal está desativado. Ative e tente de novo.`,
       true,
       false,
       'info'
@@ -313,14 +313,14 @@ export async function postWorkflowV112({
     await changeState(postsList[0].id, 'ERROR', err, postsList);
     await inAppNotification(
       post.organizationId,
-      `We couldn't confirm your post on ${capitalize(
+      `Não foi possível confirmar sua publicação no ${capitalize(
         post.integration?.providerIdentifier
       )}`,
-      `Your post was sent to ${capitalize(
+      `Sua publicação foi enviada ao ${capitalize(
         post.integration?.providerIdentifier
-      )}, but we couldn't confirm it was published. Please check your ${
+      )}, mas não confirmamos se foi publicada. Confira a conta ${
         post?.integration?.name
-      } account before posting again to avoid duplicates.`,
+      } antes de publicar de novo para evitar duplicatas.`,
       true,
       false,
       'fail'
@@ -394,8 +394,8 @@ export async function postWorkflowV112({
           await changeState(postsList[0].id, 'ERROR', err, postsList);
           await inAppNotification(
             post.organizationId,
-            `Error posting on ${post.integration?.providerIdentifier} for ${post?.integration?.name}`,
-            `An error occurred while posting on ${
+            `Erro ao publicar no ${post.integration?.providerIdentifier} (${post?.integration?.name})`,
+            `Ocorreu um erro ao publicar no ${
               post.integration?.providerIdentifier
             }${handle.message ? `: ${handle.message}` : ``}`,
             true,
@@ -502,12 +502,12 @@ export async function postWorkflowV112({
           // send notification on a sucessful post
           await inAppNotification(
             post.integration.organizationId,
-            `Your post has been published on ${capitalize(
+            `Sua publicação foi publicada no ${capitalize(
               post.integration.providerIdentifier
             )}`,
-            `Your post has been published on ${capitalize(
+            `Sua publicação foi publicada no ${capitalize(
               post.integration.providerIdentifier
-            )} at ${postsResults[0].releaseURL}`,
+            )} em ${postsResults[0].releaseURL}`,
             true,
             true
           );
@@ -563,12 +563,14 @@ export async function postWorkflowV112({
         if (handle.type === 'bad-body') {
           await inAppNotification(
             post.organizationId,
-            `Error posting${i === 0 ? ' ' : ' comments '}on ${
+            `Erro ao publicar${i === 0 ? ' ' : ' comentários '}no ${
               post.integration?.providerIdentifier
-            } for ${post?.integration?.name}`,
-            `An error occurred while posting${i === 0 ? ' ' : ' comments '}on ${
-              post.integration?.providerIdentifier
-            }${handle.message ? `: ${handle.message}` : ``}`,
+            } (${post?.integration?.name})`,
+            `Ocorreu um erro ao publicar${
+              i === 0 ? ' ' : ' comentários '
+            }no ${post.integration?.providerIdentifier}${
+              handle.message ? `: ${handle.message}` : ``
+            }`,
             true,
             false,
             'fail'

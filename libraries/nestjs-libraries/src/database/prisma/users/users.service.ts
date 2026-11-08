@@ -68,12 +68,12 @@ export class UsersService {
           this._notificationService
             .sendEmail(
               account.email,
-              'Your Postiz login was changed',
-              `An administrator changed the login for your Postiz account. ` +
-                `You can now sign in using ${account.email}. ` +
-                `Your subscription and plan were not changed by this switch — ` +
-                `if you intended to cancel a subscription, please do that ` +
-                `separately from your billing settings.`
+              'Seu login no Postiz foi alterado',
+              `Um administrador alterou o login da sua conta Postiz. ` +
+                `Agora você pode entrar com ${account.email}. ` +
+                `Sua assinatura e plano não mudaram com essa troca — ` +
+                `se quiser cancelar a assinatura, faça isso nas ` +
+                `configurações de cobrança.`
             )
             .catch((err) =>
               this._logger.error(`Failed to notify ${account.email}`, err)

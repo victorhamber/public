@@ -3,8 +3,10 @@ import { useSearchParams } from 'next/navigation';
 import { ModalWrapperComponent } from '@gitroom/frontend/components/new-launch/modal.wrapper.component';
 import { useModals } from '@gitroom/frontend/components/layout/new-modal';
 import { Button } from '@gitroom/react/form/button';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 
 export const PreConditionComponentModal: FC = () => {
+  const t = useT();
   const modal = useModals();
   return (
     <div className="flex flex-col gap-[16px]">
@@ -34,7 +36,7 @@ export const PreConditionComponent: FC = () => {
   useEffect(() => {
     if (query.get('precondition')) {
       modal.openModal({
-        title: 'Suspicious activity detected',
+        title: t('suspicious_activity_detected', 'Suspicious activity detected'),
         withCloseButton: true,
         classNames: {
           modal: 'text-textColor',

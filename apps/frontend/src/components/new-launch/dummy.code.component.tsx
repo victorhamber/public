@@ -4,8 +4,10 @@ import React, { FC } from 'react';
 import { Button } from '@gitroom/react/form/button';
 import copy from 'copy-to-clipboard';
 import { useToaster } from '@gitroom/react/toaster/toaster';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 
 export const DummyCodeComponent: FC<{ code: any }> = ({ code }) => {
+  const t = useT();
   const modal = useModals();
   const toaster = useToaster();
 
@@ -16,7 +18,7 @@ export const DummyCodeComponent: FC<{ code: any }> = ({ code }) => {
           className="mr-[50px]"
           onClick={() => {
             copy(JSON.stringify(code, null, 2));
-            toaster.show('Code copied to clipboard', 'success');
+            toaster.show(t('code_copied_to_clipboard', 'Code copied to clipboard'), 'success');
           }}
         >
           Copy Code

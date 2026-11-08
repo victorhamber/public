@@ -114,22 +114,25 @@ export const PlugPop: FC<{
     values,
     mode: 'all',
   });
-  const submit: SubmitHandler<any> = useCallback(async (data) => {
-    await fetch(`/integrations/${settings.providerId}/plugs`, {
-      method: 'POST',
-      body: JSON.stringify({
-        func: plug.methodName,
-        fields: Object.keys(data).map((key) => ({
-          name: key,
-          value: data[key],
-        })),
-      }),
-    });
-    toaster.show('Plug updated', 'success');
-    closeAll();
-  }, []);
-
   const t = useT();
+
+  const submit: SubmitHandler<any> = useCallback(
+    async (data) => {
+      await fetch(`/integrations/${settings.providerId}/plugs`, {
+        method: 'POST',
+        body: JSON.stringify({
+          func: plug.methodName,
+          fields: Object.keys(data).map((key) => ({
+            name: key,
+            value: data[key],
+          })),
+        }),
+      });
+      toaster.show(t('plug_updated', 'Plug updated'), 'success');
+      closeAll();
+    },
+    [closeAll, fetch, plug.methodName, settings.providerId, t, toaster]
+  );
 
   return (
     <FormProvider {...form}>

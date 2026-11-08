@@ -118,7 +118,7 @@ export const DeveloperComponent: FC = () => {
 
   const createApp = useCallback(async () => {
     if (!name || !redirectUrl) {
-      toaster.show('Name and Redirect URL are required', 'warning');
+      toaster.show(t('name_and_redirect_required', 'Name and Redirect URL are required'), 'warning');
       return;
     }
     try {
@@ -144,7 +144,7 @@ export const DeveloperComponent: FC = () => {
       setCreating(false);
       mutate();
     } catch {
-      toaster.show('Failed to create app', 'warning');
+      toaster.show(t('failed_to_create_app', 'Failed to create app'), 'warning');
     }
   }, [name, description, redirectUrl, pictureId]);
 
@@ -159,11 +159,11 @@ export const DeveloperComponent: FC = () => {
           pictureId,
         }),
       });
-      toaster.show('App updated', 'success');
+      toaster.show(t('app_updated', 'App updated'), 'success');
       setEditing(false);
       mutate();
     } catch {
-      toaster.show('Failed to update app', 'warning');
+      toaster.show(t('failed_to_update_app', 'Failed to update app'), 'warning');
     }
   }, [name, description, redirectUrl, pictureId]);
 
@@ -189,7 +189,7 @@ export const DeveloperComponent: FC = () => {
         mutate();
       }
     } catch {
-      toaster.show('Failed to rotate secret', 'warning');
+      toaster.show(t('failed_to_rotate_secret', 'Failed to rotate secret'), 'warning');
     }
   }, [decision]);
 
@@ -204,11 +204,11 @@ export const DeveloperComponent: FC = () => {
     if (!approved) return;
     try {
       await fetch('/user/oauth-app', { method: 'DELETE' });
-      toaster.show('OAuth app deleted', 'success');
+      toaster.show(t('oauth_app_deleted', 'OAuth app deleted'), 'success');
       setPlaintextSecret(null);
       mutate();
     } catch {
-      toaster.show('Failed to delete app', 'warning');
+      toaster.show(t('failed_to_delete_app', 'Failed to delete app'), 'warning');
     }
   }, [decision]);
 

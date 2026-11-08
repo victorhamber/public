@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-08 — Português padrão neste fork
+- Contexto: UI em PT ainda mostrava inglês em streak, toasts e sininho (texto gravado no servidor).
+- Decisão: `fallbackLng=pt`; notificações/e-mails novos em PT no orchestrator; mapa EN→PT na exibição do sininho.
+- Alternativas descartadas: i18n multi-idioma no Temporal; migração SQL das notificações antigas.
+- Consequência: novas mensagens já nascem em PT; antigas traduzem na UI pelos padrões conhecidos.
+
 ## 2026-11-08 — WhatsApp no discriminator de post + foto via data-url
 - Contexto: salvar publicação com canal WhatsApp devolvia toast genérico; avatars vinham `/no-picture.jpg`.
 - Decisão: registrar `WhatsappDto` em `all.providers.settings`. Baixar foto do WAHA como data-url no `authenticate` e oferecer `sync-pictures`.

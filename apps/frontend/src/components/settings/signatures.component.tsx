@@ -50,7 +50,7 @@ export const SignaturesComponent: FC<{
           method: 'DELETE',
         });
         mutate();
-        toaster.show('Signature deleted successfully', 'success');
+        toaster.show(t('signature_deleted_successfully', 'Signature deleted successfully'), 'success');
       }
     },
     []

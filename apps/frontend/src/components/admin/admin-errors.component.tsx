@@ -9,6 +9,7 @@ import { useToaster } from '@gitroom/react/toaster/toaster';
 import { useModals } from '@gitroom/frontend/components/layout/new-modal';
 import { Button } from '@gitroom/react/form/button';
 import { LoadingComponent } from '@gitroom/frontend/components/layout/loading';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 
 interface ErrorRow {
   id: string;
@@ -44,6 +45,7 @@ const safeParse = (value: string) => {
 const ErrorDetailsModal: FC<{ row: ErrorRow }> = ({ row }) => {
   const modal = useModals();
   const toaster = useToaster();
+  const t = useT();
   const parsedMessage = useMemo(() => safeParse(row.message), [row.message]);
   const parsedBody = useMemo(() => safeParse(row.body), [row.body]);
 
@@ -55,8 +57,11 @@ const ErrorDetailsModal: FC<{ row: ErrorRow }> = ({ row }) => {
         2
       )
     );
-    toaster.show('Debug code copied to clipboard', 'success');
-  }, [parsedMessage, parsedBody, row, toaster]);
+    toaster.show(
+      t('debug_code_copied', 'Debug code copied to clipboard'),
+      'success'
+    );
+  }, [parsedMessage, parsedBody, row, toaster, t]);
 
   return (
     <div className="rounded-[4px] border border-newTableBorder bg-newBgColorInner px-[16px] pb-[16px] relative w-full max-h-[80vh] overflow-auto">
@@ -170,6 +175,7 @@ const useErrorsList = (params: {
 };
 
 export const AdminErrorsComponent: FC = () => {
+  const t = useT();
   const user = useUser();
   const modal = useModals();
   const toaster = useToaster();
@@ -225,7 +231,7 @@ export const AdminErrorsComponent: FC = () => {
           2
         )
       );
-      toaster.show('Debug code copied to clipboard', 'success');
+      toaster.show(t('debug_code_copied', 'Debug code copied to clipboard'), 'success');
     },
     [toaster]
   );

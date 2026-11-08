@@ -128,9 +128,15 @@ export const Sets: FC = () => {
                         });
                         modal.closeAll();
                         mutate();
-                        toaster.show('Set saved successfully', 'success');
+                        toaster.show(
+                          t('set_saved_successfully', 'Set saved successfully'),
+                          'success'
+                        );
                       } catch (error) {
-                        toaster.show('Failed to save set', 'warning');
+                        toaster.show(
+                          t('failed_to_save_set', 'Failed to save set'),
+                          'warning'
+                        );
                       }
                     }}
                     onCancel={() => modal.closeAll()}
@@ -157,7 +163,10 @@ export const Sets: FC = () => {
           method: 'DELETE',
         });
         mutate();
-        toaster.show('Set deleted successfully', 'success');
+        toaster.show(
+          t('set_deleted_successfully', 'Set deleted successfully'),
+          'success'
+        );
       }
     },
     []

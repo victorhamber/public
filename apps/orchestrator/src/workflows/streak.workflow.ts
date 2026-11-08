@@ -32,8 +32,8 @@ export async function streakWorkflow({
       }
       await sendEmailAsync(
         user.user.email,
-        'Streak Reminder',
-        '<p>You are about to lose your streak in two hours! schedule a post now to keep it!</p>',
+        'Lembrete de sequência',
+        '<p>Sua sequência acaba em duas horas! Programe uma publicação agora para mantê-la!</p>',
         'bottom'
       );
     }
@@ -59,8 +59,8 @@ export async function streakWorkflow({
       }
       await sendEmailAsync(
         user.user.email,
-        'Streak Ended',
-        '<p>Your streak has ended! You didn\'t post anything in the last 24 hours. Schedule a post now to start a new streak!</p>',
+        'Sequência encerrada',
+        '<p>Sua sequência acabou! Você não publicou nada nas últimas 24 horas. Programe uma publicação agora para começar de novo!</p>',
         'bottom'
       );
     }
@@ -101,8 +101,8 @@ export async function streakWorkflowV2({
       }
       await sendEmailAsync(
         user.user.email,
-        'Streak Ended',
-        "<p>Your streak has ended! You didn't post anything in the last 24 hours. Schedule a post now to start a new streak!</p>",
+        'Sequência encerrada',
+        '<p>Sua sequência acabou! Você não publicou nada nas últimas 24 horas. Programe uma publicação agora para começar de novo!</p>',
         'bottom'
       );
     }

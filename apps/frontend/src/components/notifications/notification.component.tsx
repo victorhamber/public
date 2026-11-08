@@ -8,6 +8,7 @@ import { newDayjs } from '@gitroom/frontend/components/layout/set.timezone';
 import { useClickAway } from '@uidotdev/usehooks';
 import ReactLoading from '@gitroom/frontend/components/layout/loading';
 import { useT } from '@gitroom/react/translation/get.transation.service.client';
+import { translateNotificationContent } from '@gitroom/frontend/components/notifications/translate.notification';
 // notifications are plain text, the urls in them become short links
 function replaceLinks(text: string) {
   const urlRegex =
@@ -45,7 +46,7 @@ export const ShowNotification: FC<{
     <div className="flex gap-[12px] px-[16px] py-[14px] border-b border-newTableBorder last:border-b-0">
       <div className="flex-1 min-w-0 flex flex-col gap-[4px]">
         <div className="text-[14px] leading-[20px] break-words">
-          {replaceLinks(notification.content)}
+          {replaceLinks(translateNotificationContent(notification.content))}
         </div>
         <div
           className="text-[12px] text-textItemBlur"
