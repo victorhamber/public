@@ -19,6 +19,7 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 ## Invariantes e armadilhas
 - Sessão fixa `postiz`. Não apontar para o WAHA do Desk.
 - NOWEB precisa de `config.noweb.store.enabled=true` senão `/groups` volta vazio.
+- Não dar PUT na sessão a cada poll do QR: isso reinicia e fica em `STARTING`.
 - Chamadas ao WAHA usam `fetch` direto; o filtro SSRF do Postiz bloquearia a URL interna.
 - Acima do teto, envia sem marcar o grupo inteiro.
 
