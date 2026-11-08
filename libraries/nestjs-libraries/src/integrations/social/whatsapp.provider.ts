@@ -140,23 +140,15 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
           config: this.sessionConfig(),
         }),
       });
-      session = await this.wahaJson<WahaSession>(`/api/sessions/${SESSION}`);
-    } else {
-      // Existing session may have been created without store.
-      await this.wahaJson(`/api/sessions/${SESSION}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          name: SESSION,
-          config: this.sessionConfig(),
-        }),
-      }).catch(() => undefined);
+      return this.wahaJson<WahaSession>(`/api/sessions/${SESSION}`);
+    }
 
-      if (
-        session.status &&
-        !['WORKING', 'SCAN_QR_CODE', 'STARTING'].includes(session.status)
-      ) {
-        await this.waha(`/api/sessions/${SESSION}/start`, { method: 'POST' });
-      }
+    // Never PUT on every poll: that restarts the session and leaves STARTING.
+    if (
+      session.status &&
+      !['WORKING', 'SCAN_QR_CODE', 'STARTING'].includes(session.status)
+    ) {
+      await this.waha(`/api/sessions/${SESSION}/start`, { method: 'POST' });
       session = await this.wahaJson<WahaSession>(`/api/sessions/${SESSION}`);
     }
 
@@ -170,13 +162,16 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
       return { status };
     }
 
-    const res = await this.waha(
-      `/api/${SESSION}/auth/qr?format=image`,
-      { headers: { Accept: 'image/png' } }
-    );
+    // QR exists only after SCAN_QR_CODE. STARTING has no image yet.
+    if (status !== 'SCAN_QR_CODE') {
+      return { status };
+    }
+
+    const res = await this.waha(`/api/${SESSION}/auth/qr?format=image`, {
+      headers: { Accept: 'image/png' },
+    });
     if (!res.ok) {
-      const text = await res.text();
-      return { status, qr: undefined, ...(text ? {} : {}) };
+      return { status };
     }
     const buf = Buffer.from(await res.arrayBuffer());
     return {

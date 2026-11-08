@@ -2,12 +2,12 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- Lista de grupos vazia: sessão NOWEB criada sem store. Correção no provedor.
+- QR preso em STARTING: o poll fazia PUT e reiniciava a sessão. Correção no provedor.
 
 ## Próximos passos
 1. Deploy da correção.
-2. Fechar o diálogo, abrir WhatsApp de novo e escanear o QR.
+2. Abrir WhatsApp de novo e escanear o QR.
 3. Escolher o grupo.
 
 ## Bloqueios / dúvidas
-- Depois do deploy, o Refresh na lista vazia recria a sessão e pede QR de novo.
+- Erros nginx `no live upstreams` no boot são corrida: o nginx sobe antes do Nest. Depois o backend fica ok.
