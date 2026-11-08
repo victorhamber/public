@@ -195,60 +195,68 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     return this.ensureSession();
   }
 
+  private asGroupList(raw: any): WahaGroup[] {
+    const list = Array.isArray(raw)
+      ? raw
+      : Array.isArray(raw?.data)
+      ? raw.data
+      : Array.isArray(raw?.groups)
+      ? raw.groups
+      : [];
+    return list
+      .map((g: any) => ({
+        id: String(g?.id || g?.jid || g?.chatId || ''),
+        subject: g?.subject || g?.name || g?.notify || '',
+        name: g?.name || g?.subject || g?.notify || '',
+      }))
+      .filter((g: WahaGroup) => !!g.id);
+  }
+
+  private sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private async fetchGroupsOnce(): Promise<WahaGroup[]> {
+    // Do not call /groups/refresh on every list: it races the store sync and
+    // can empty the UI right after WhatsApp finishes syncing.
+    try {
+      const raw = await this.wahaJson<any>(
+        `/api/${SESSION}/groups?exclude=participants`
+      );
+      const groups = this.asGroupList(raw);
+      if (groups.length) {
+        return groups;
+      }
+    } catch {
+      // fall through
+    }
+
+    try {
+      const chats = await this.wahaJson<any>(`/api/${SESSION}/chats?limit=500`);
+      return this.asGroupList(chats).filter((g) => g.id.endsWith('@g.us'));
+    } catch {
+      return [];
+    }
+  }
+
   async listGroups(): Promise<{ id: string; name: string }[]> {
     const session = await this.ensureSession();
     if (session.status !== 'WORKING') {
       return [];
     }
 
-    await this.waha(`/api/${SESSION}/groups/refresh`, {
-      method: 'POST',
-    }).catch(() => undefined);
-
-    let groups: WahaGroup[] = [];
-    try {
-      groups = await this.wahaJson<WahaGroup[]>(
-        `/api/${SESSION}/groups?exclude=participants`
-      );
-    } catch {
-      groups = [];
+    // Right after QR, NOWEB store still syncs. A couple of short retries
+    // only — the UI keeps polling Refresh. Never delete the session here.
+    let groups = await this.fetchGroupsOnce();
+    if (!groups.length) {
+      await this.sleep(1500);
+      groups = await this.fetchGroupsOnce();
     }
 
-    if (!Array.isArray(groups) || groups.length === 0) {
-      // Fallback: chats store, keep only WhatsApp groups (@g.us).
-      try {
-        const chats = await this.wahaJson<any[]>(
-          `/api/${SESSION}/chats?limit=500`
-        );
-        groups = (Array.isArray(chats) ? chats : [])
-          .filter((c) => String(c?.id || c?.chatId || '').endsWith('@g.us'))
-          .map((c) => ({
-            id: String(c.id || c.chatId),
-            subject: c.name || c.subject || c.id,
-            name: c.name || c.subject || c.id,
-          }));
-      } catch {
-        groups = [];
-      }
-    }
-
-    const mapped = (Array.isArray(groups) ? groups : []).map((g) => ({
+    return groups.map((g) => ({
       id: g.id,
       name: g.subject || g.name || g.id,
     }));
-
-    if (mapped.length === 0) {
-      // Session was almost certainly created without NOWEB store.
-      // Recreate so the next QR sync fills groups.
-      await this.waha(`/api/sessions/${SESSION}`, {
-        method: 'DELETE',
-      }).catch(() => undefined);
-      throw new Error(
-        'WhatsApp session rebuilt without group store. Close this dialog, open WhatsApp again and scan the QR.'
-      );
-    }
-
-    return mapped;
   }
 
   private async groupParticipants(chatId: string): Promise<string[]> {
@@ -282,14 +290,14 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
 
     const groups = await this.listGroups();
     const group = groups.find((g) => g.id === chatId);
-    if (!group) {
+    if (!group && !chatId.endsWith('@g.us')) {
       return 'Group not found. Refresh the list and try again.';
     }
 
     return {
-      id: group.id,
-      name: group.name,
-      accessToken: group.id,
+      id: chatId,
+      name: group?.name || chatId,
+      accessToken: chatId,
       refreshToken: '',
       expiresIn: dayjs().add(200, 'year').unix() - dayjs().unix(),
       picture: '',

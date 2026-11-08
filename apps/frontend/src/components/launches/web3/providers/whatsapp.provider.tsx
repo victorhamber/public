@@ -28,11 +28,14 @@ export const WhatsappProvider: FC<Web3ProviderInterface> = (props) => {
       if (data?.error) {
         setError(data.error);
         setGroups([]);
-        return;
+        return 0;
       }
-      setGroups(Array.isArray(data?.groups) ? data.groups : []);
+      const next = Array.isArray(data?.groups) ? data.groups : [];
+      setGroups(next);
+      return next.length;
     } catch (err: any) {
       setError(err?.message || 'Failed to load groups');
+      return 0;
     } finally {
       setLoadingGroups(false);
     }
@@ -56,7 +59,17 @@ export const WhatsappProvider: FC<Web3ProviderInterface> = (props) => {
             }
             if (data.status === 'WORKING') {
               setQr('');
-              await loadGroups();
+              // Store sync can lag a few seconds after the QR succeeds.
+              for (let i = 0; i < 10; i++) {
+                if (stop.current) {
+                  return;
+                }
+                const count = await loadGroups();
+                if (count > 0) {
+                  return;
+                }
+                await timer(2000);
+              }
               return;
             }
           }
@@ -109,7 +122,7 @@ export const WhatsappProvider: FC<Web3ProviderInterface> = (props) => {
               <div className="text-sm opacity-70 text-center">
                 {t(
                   'no_whatsapp_groups',
-                  'No groups found. Click Refresh once. If it stays empty, close and scan the QR again.'
+                  'Groups are still syncing. Wait a few seconds and click Refresh. Do not close if the phone already shows connected.'
                 )}
               </div>
             ) : (

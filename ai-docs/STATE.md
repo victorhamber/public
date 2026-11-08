@@ -2,12 +2,12 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- QR preso em STARTING: o poll fazia PUT e reiniciava a sessão. Correção no provedor.
+- Bug: lista vazia apagava a sessão depois do sync (24 grupos no store → Intentional Logout).
 
 ## Próximos passos
 1. Deploy da correção.
-2. Abrir WhatsApp de novo e escanear o QR.
-3. Escolher o grupo.
+2. Escanear o QR de novo.
+3. Esperar a lista; Refresh se ainda sincronizar.
 
 ## Bloqueios / dúvidas
-- Erros nginx `no live upstreams` no boot são corrida: o nginx sobe antes do Nest. Depois o backend fica ok.
+- Nenhum. Não apagar sessão em lista vazia.
