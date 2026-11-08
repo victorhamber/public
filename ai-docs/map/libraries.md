@@ -541,7 +541,7 @@
 - translation.json [900L]
 
 ## libraries/react-shared-libraries/src/translation/locales/en/
-- translation.json [943L]
+- translation.json [945L]
 
 ## libraries/react-shared-libraries/src/translation/locales/es/
 - translation.json [900L]
@@ -565,7 +565,7 @@
 - translation.json [900L]
 
 ## libraries/react-shared-libraries/src/translation/locales/pt/
-- translation.json [943L]
+- translation.json [945L]
 
 ## libraries/react-shared-libraries/src/translation/locales/ru/
 - translation.json [900L]

@@ -938,5 +938,7 @@
   "accept_discount_question": "Aceitaria 50% de desconto por 3 meses?",
   "apply_discount_3_months": "Aplicar 50% de desconto por 3 meses",
   "could_not_validate_payment_method": "Não foi possível validar seu método de pagamento, tente de novo",
-  "video_generation_failed_or_timed_out": "A geração de vídeo falhou ou esgotou o tempo — se concluir, aparece na biblioteca de mídia"
+  "video_generation_failed_or_timed_out": "A geração de vídeo falhou ou esgotou o tempo — se concluir, aparece na biblioteca de mídia",
+  "signature_updated_successfully": "Assinatura atualizada com sucesso",
+  "signature_added_successfully": "Assinatura adicionada com sucesso"
 }

@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-08 — Build do GitHub só sob demanda
+- Contexto: cada push em `main` rodava `build.yml` e mandava e-mail de falha; o deploy real é no Easypanel.
+- Decisão: `on: workflow_dispatch` (+ PR/merge_group). Corrigir `useT` fora de escopo que quebrou o build da tradução.
+- Alternativas descartadas: manter build em todo push; apagar o workflow.
+- Consequência: sem spam de Actions no e-mail; CI ainda dá para rodar na mão.
+
 ## 2026-11-08 — Português padrão neste fork
 - Contexto: UI em PT ainda mostrava inglês em streak, toasts e sininho (texto gravado no servidor).
 - Decisão: `fallbackLng=pt`; notificações/e-mails novos em PT no orchestrator; mapa EN→PT na exibição do sininho.

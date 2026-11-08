@@ -1,8 +1,10 @@
 ---
 name: Build
 
+# This fork deploys via Easypanel. Keep CI available on demand so failed
+# Actions runs do not spam email on every docs/UI push to main.
 on:
-  push:
+  workflow_dispatch:
   merge_group:
   pull_request:
 

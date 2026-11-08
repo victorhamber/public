@@ -938,5 +938,7 @@
   "accept_discount_question": "Would you accept 50% discount for 3 months instead?",
   "apply_discount_3_months": "Apply 50% discount for 3 months",
   "could_not_validate_payment_method": "We could not validate your payment method, please try again",
-  "video_generation_failed_or_timed_out": "Video generation failed or timed out — if it completes, it will appear in your media library"
+  "video_generation_failed_or_timed_out": "Video generation failed or timed out — if it completes, it will appear in your media library",
+  "signature_updated_successfully": "Signature updated successfully",
+  "signature_added_successfully": "Signature added successfully"
 }

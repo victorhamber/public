@@ -1,4 +1,4 @@
-# MAP — postiz-fork · 2026-11-08 · 913 arquivos · 154708 linhas
+# MAP — postiz-fork · 2026-11-08 · 913 arquivos · 154718 linhas
 > Gerado por ai-docs/tools/map_repo.py — NÃO editar. Use isto em vez de ler o código inteiro: ache o arquivo/símbolo aqui e abra só o trecho.
 Stack: node
 Entradas: npm scripts: dev, dev-backend, pm2, publish-sdk, pm2-run, dev:stripe, build, build:backend; index.js; apps/orchestrator/src/workflows/index.ts; apps/sdk/src/index.ts

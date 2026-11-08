@@ -411,7 +411,7 @@
 - new-modal.tsx [460L] — useModals(), showModalEmitter(), useDecisionModal()
 - new.subscription.tsx [15L]
 - organization.selector.tsx [113L]
-- pre-condition.component.tsx [50L] Please note this payment is final and not refundable.
+- pre-condition.component.tsx [51L] Please note this payment is final and not refundable.
 - redirect.tsx [18L]
 - sentry.component.tsx [21L] Always render children - don't block the app
 - set.timezone.tsx [353L] the plugin below wraps methods of these, so they are registered first — formatter(), exactOffset(), cachedOffset(), offsetAt(), wallToInstant(), browserTimezone(), isTimezone(), applyTimezone(), getTimezone(), setUserTimezone(), newDayjs(), fromUtc(), +1
@@ -672,11 +672,11 @@
 - authentication.component.tsx [50L] — AuthenticationComponent()
 - delete-account.component.tsx [162L] — useDeleteAccountInfo()
 - email-notifications.component.tsx [174L] — useEmailNotifications(), EmailNotificationsComponent()
-- github.component.tsx [217L]
+- github.component.tsx [216L]
 - global.settings.tsx [31L] — GlobalSettings()
 - metric.component.tsx [98L] the list has names that aren't IANA timezones (Europe/Zaporizhzhia) — MetricComponent()
 - shortlink-preference.component.tsx [118L] — useShortlinkPreference(), ShortlinkPreferenceComponent()
-- signatures.component.tsx [267L]
+- signatures.component.tsx [271L]
 - teams.component.tsx [238L] — AddMember(), TeamsComponent()
 
 ## apps/frontend/src/components/standalone-modal/

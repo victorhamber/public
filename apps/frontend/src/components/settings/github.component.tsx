@@ -59,6 +59,7 @@ const ConnectComponent: FC<{
   const [url, setUrl] = useState('');
   const fetch = useFetch();
   const toast = useToaster();
+  const t = useT();
   const cancelConnection = useCallback(async () => {
     await (
       await fetch(`/settings/repository/${id}`, {
@@ -66,7 +67,7 @@ const ConnectComponent: FC<{
       })
     ).json();
     deleteRepository();
-  }, []);
+  }, [deleteRepository, fetch, id]);
   const completeConnection = useCallback(async () => {
     const [select, repo] = url
       .match(/https:\/\/github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)/)!
@@ -82,9 +83,7 @@ const ConnectComponent: FC<{
       return;
     }
     setConnected(`${select}/${repo}`);
-  }, [url]);
-
-  const t = useT();
+  }, [fetch, id, setConnected, t, toast, url]);
 
   return (
     <div className="my-[16px] mt-[16px] h-[100px] bg-sixth border-fifth border rounded-[4px] px-[24px] flex">

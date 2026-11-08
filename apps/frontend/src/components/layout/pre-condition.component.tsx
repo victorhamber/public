@@ -33,6 +33,7 @@ export const PreConditionComponentModal: FC = () => {
 export const PreConditionComponent: FC = () => {
   const modal = useModals();
   const query = useSearchParams();
+  const t = useT();
   useEffect(() => {
     if (query.get('precondition')) {
       modal.openModal({
@@ -44,6 +45,6 @@ export const PreConditionComponent: FC = () => {
         children: <PreConditionComponentModal />,
       });
     }
-  }, []);
+  }, [modal, query, t]);
   return null;
 };

@@ -20,9 +20,10 @@ export const SignaturesComponent: FC<{
   const fetch = useFetch();
   const modal = useModals();
   const toaster = useToaster();
+  const t = useT();
   const load = useCallback(async () => {
     return (await fetch('/signatures')).json();
-  }, []);
+  }, [fetch]);
   const { data, mutate } = useSWR('signatures', load);
   const addSignature = useCallback(
     (data?: any) => () => {
@@ -32,7 +33,7 @@ export const SignaturesComponent: FC<{
         children: <AddOrRemoveSignature data={data} reload={mutate} />,
       });
     },
-    [mutate]
+    [modal, mutate]
   );
 
   const deleteSignature = useCallback(
@@ -50,13 +51,17 @@ export const SignaturesComponent: FC<{
           method: 'DELETE',
         });
         mutate();
-        toaster.show(t('signature_deleted_successfully', 'Signature deleted successfully'), 'success');
+        toaster.show(
+          t(
+            'signature_deleted_successfully',
+            'Signature deleted successfully'
+          ),
+          'success'
+        );
       }
     },
-    []
+    [fetch, mutate, t, toaster]
   );
-
-  const t = useT();
 
   return (
     <div className="flex flex-col">
@@ -170,6 +175,7 @@ const AddOrRemoveSignature: FC<{
   const { data, reload } = props;
   const toast = useToaster();
   const fetch = useFetch();
+  const t = useT();
   const form = useForm({
     resolver: yupResolver(details),
     values: {
@@ -188,17 +194,15 @@ const AddOrRemoveSignature: FC<{
       });
       toast.show(
         data?.id
-          ? 'Signature updated successfully'
-          : 'Signature added successfully',
+          ? t('signature_updated_successfully', 'Signature updated successfully')
+          : t('signature_added_successfully', 'Signature added successfully'),
         'success'
       );
       modal.closeCurrent();
       reload();
     },
-    [data, modal]
+    [data, fetch, modal, reload, t, toast]
   );
-
-  const t = useT();
 
   return (
     <FormProvider {...form}>

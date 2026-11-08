@@ -10,3 +10,4 @@ Propósito: português como idioma padrão deste fork Postiz.
 ## Invariantes e armadilhas
 - Marcas (WhatsApp, Google) ficam iguais.
 - Workflows `v1.0.x`–`v1.1.1` não são iniciados; não precisam de tradução.
+- `useT()` precisa existir no mesmo componente que chama `t(` — senão o build do GitHub quebra.

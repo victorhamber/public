@@ -2,11 +2,11 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- Nada. Tradução PT no ar (default i18n, notificações, e-mails, toasts).
+- Correção do CI GitHub (useT fora de escopo) + Build só sob demanda.
 
 ## Próximos passos
-1. Victor dá F5 e confere streak/sininho/toasts.
-2. Avisar se alguma tela específica ainda sair em inglês.
+1. Push e confirmar Actions sem e-mail automático em push.
+2. Victor confere UI em PT.
 
 ## Bloqueios / dúvidas
 - Nenhum.
