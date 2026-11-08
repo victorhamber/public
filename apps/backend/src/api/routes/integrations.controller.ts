@@ -521,6 +521,16 @@ export class IntegrationsController {
     }
   }
 
+  @Post('/whatsapp/reset')
+  async whatsappReset() {
+    try {
+      await new WhatsappProvider().resetSession();
+      return { ok: true };
+    } catch (err: any) {
+      return { error: err?.message || 'WAHA unavailable' };
+    }
+  }
+
   @Post('/moltbook/register')
   async moltbookRegister(@Body() body: { name: string; description: string }) {
     try {

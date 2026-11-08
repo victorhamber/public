@@ -107,7 +107,10 @@ export const WhatsappProvider: FC<Web3ProviderInterface> = (props) => {
           <div className="w-full max-h-[280px] overflow-auto flex flex-col gap-[8px]">
             {groups.length === 0 && !loadingGroups ? (
               <div className="text-sm opacity-70 text-center">
-                {t('no_whatsapp_groups', 'No groups found for this session.')}
+                {t(
+                  'no_whatsapp_groups',
+                  'No groups found. Click Refresh once. If it stays empty, close and scan the QR again.'
+                )}
               </div>
             ) : (
               groups.map((g) => (

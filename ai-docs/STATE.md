@@ -2,12 +2,12 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- Provedor WhatsApp no fork. WAHA no Easypanel sem domínio público.
+- Lista de grupos vazia: sessão NOWEB criada sem store. Correção no provedor.
 
 ## Próximos passos
-1. Push e deploy do Postiz.
-2. Conectar o número de publicação pelo QR.
-3. Publicar um teste com menção invisível.
+1. Deploy da correção.
+2. Fechar o diálogo, abrir WhatsApp de novo e escanear o QR.
+3. Escolher o grupo.
 
 ## Bloqueios / dúvidas
-- Nenhum.
+- Depois do deploy, o Refresh na lista vazia recria a sessão e pede QR de novo.

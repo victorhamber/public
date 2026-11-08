@@ -110,6 +110,19 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     };
   }
 
+  private sessionConfig() {
+    // NOWEB returns empty groups/chats unless the local store is on.
+    return {
+      webhooks: [] as any[],
+      noweb: {
+        store: {
+          enabled: true,
+          fullSync: false,
+        },
+      },
+    };
+  }
+
   async ensureSession() {
     let session: WahaSession | null = null;
     try {
@@ -124,15 +137,26 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
         body: JSON.stringify({
           name: SESSION,
           start: true,
-          config: { webhooks: [] },
+          config: this.sessionConfig(),
         }),
       });
       session = await this.wahaJson<WahaSession>(`/api/sessions/${SESSION}`);
-    } else if (
-      session.status &&
-      !['WORKING', 'SCAN_QR_CODE', 'STARTING'].includes(session.status)
-    ) {
-      await this.waha(`/api/sessions/${SESSION}/start`, { method: 'POST' });
+    } else {
+      // Existing session may have been created without store.
+      await this.wahaJson(`/api/sessions/${SESSION}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: SESSION,
+          config: this.sessionConfig(),
+        }),
+      }).catch(() => undefined);
+
+      if (
+        session.status &&
+        !['WORKING', 'SCAN_QR_CODE', 'STARTING'].includes(session.status)
+      ) {
+        await this.waha(`/api/sessions/${SESSION}/start`, { method: 'POST' });
+      }
       session = await this.wahaJson<WahaSession>(`/api/sessions/${SESSION}`);
     }
 
@@ -169,19 +193,67 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     };
   }
 
+  async resetSession() {
+    await this.waha(`/api/sessions/${SESSION}`, {
+      method: 'DELETE',
+    }).catch(() => undefined);
+    return this.ensureSession();
+  }
+
   async listGroups(): Promise<{ id: string; name: string }[]> {
     const session = await this.ensureSession();
     if (session.status !== 'WORKING') {
       return [];
     }
 
-    const groups = await this.wahaJson<WahaGroup[]>(
-      `/api/${SESSION}/groups?exclude=participants`
-    );
-    return (Array.isArray(groups) ? groups : []).map((g) => ({
+    await this.waha(`/api/${SESSION}/groups/refresh`, {
+      method: 'POST',
+    }).catch(() => undefined);
+
+    let groups: WahaGroup[] = [];
+    try {
+      groups = await this.wahaJson<WahaGroup[]>(
+        `/api/${SESSION}/groups?exclude=participants`
+      );
+    } catch {
+      groups = [];
+    }
+
+    if (!Array.isArray(groups) || groups.length === 0) {
+      // Fallback: chats store, keep only WhatsApp groups (@g.us).
+      try {
+        const chats = await this.wahaJson<any[]>(
+          `/api/${SESSION}/chats?limit=500`
+        );
+        groups = (Array.isArray(chats) ? chats : [])
+          .filter((c) => String(c?.id || c?.chatId || '').endsWith('@g.us'))
+          .map((c) => ({
+            id: String(c.id || c.chatId),
+            subject: c.name || c.subject || c.id,
+            name: c.name || c.subject || c.id,
+          }));
+      } catch {
+        groups = [];
+      }
+    }
+
+    const mapped = (Array.isArray(groups) ? groups : []).map((g) => ({
       id: g.id,
       name: g.subject || g.name || g.id,
     }));
+
+    if (mapped.length === 0) {
+      // Session was almost certainly created without NOWEB store.
+      // Recreate so the next QR sync fills groups.
+      await this.waha(`/api/sessions/${SESSION}`, {
+        method: 'DELETE',
+      }).catch(() => undefined);
+      throw new Error(
+        'WhatsApp session rebuilt without group store. Close this dialog, open WhatsApp again and scan the QR.'
+      );
+    }
+
+    return mapped;
   }
 
   private async groupParticipants(chatId: string): Promise<string[]> {
