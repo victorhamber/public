@@ -4,13 +4,20 @@ import {
   PostComment,
   withProvider,
 } from '@gitroom/frontend/components/new-launch/providers/high.order.provider';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { WhatsappDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/whatsapp.dto';
 import { useSettings } from '@gitroom/frontend/components/launches/helpers/use.values';
 import { Checkbox } from '@gitroom/react/form/checkbox';
 
 const WhatsappSettings: FC = () => {
-  const { register } = useSettings();
+  const { register, setValue, getValues } = useSettings();
+
+  useEffect(() => {
+    if (typeof getValues('invisibleMention') === 'undefined') {
+      setValue('invisibleMention', true);
+    }
+  }, [getValues, setValue]);
+
   return (
     <div>
       <Checkbox

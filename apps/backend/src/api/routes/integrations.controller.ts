@@ -531,6 +531,64 @@ export class IntegrationsController {
     }
   }
 
+  @Post('/whatsapp/connect-groups')
+  @CheckPolicies([AuthorizationActions.Create, Sections.CHANNEL])
+  async whatsappConnectGroups(
+    @GetOrgFromRequest() org: Organization,
+    @Body() body: { groupIds?: string[]; state?: string }
+  ) {
+    const groupIds = Array.isArray(body?.groupIds)
+      ? [...new Set(body.groupIds.map((id) => String(id || '').trim()).filter(Boolean))]
+      : [];
+    if (!groupIds.length) {
+      return { error: 'No groups selected', connected: [] };
+    }
+
+    const provider = new WhatsappProvider();
+    const connected: { id: string; name: string }[] = [];
+    const errors: string[] = [];
+
+    for (const groupId of groupIds) {
+      try {
+        const auth = await provider.authenticate({
+          code: groupId,
+          codeVerifier: body?.state || '',
+        });
+        if (typeof auth === 'string') {
+          errors.push(`${groupId}: ${auth}`);
+          continue;
+        }
+        await this._integrationService.createOrUpdateIntegration(
+          undefined,
+          false,
+          org.id,
+          auth.name,
+          auth.picture,
+          'social',
+          String(auth.id),
+          'whatsapp',
+          auth.accessToken,
+          auth.refreshToken || '',
+          auth.expiresIn,
+          auth.username
+        );
+        connected.push({ id: String(auth.id), name: auth.name });
+      } catch (err: any) {
+        errors.push(`${groupId}: ${err?.message || 'failed'}`);
+      }
+    }
+
+    if (!connected.length) {
+      return {
+        error: errors[0] || 'Failed to connect groups',
+        connected,
+        errors,
+      };
+    }
+
+    return { connected, errors };
+  }
+
   @Post('/moltbook/register')
   async moltbookRegister(@Body() body: { name: string; description: string }) {
     try {

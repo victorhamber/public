@@ -1,5 +1,5 @@
 # waha
-Fontes: docker-compose.yaml, .env.example
+Fontes: docker-compose.yaml, .env.example, libraries/nestjs-libraries/src/integrations/social/whatsapp.provider.ts
 Propósito: sessão WhatsApp deste Postiz, acessível só pela rede interna.
 
 ## API pública

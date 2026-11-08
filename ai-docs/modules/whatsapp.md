@@ -5,7 +5,10 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 ## API pública
 - `GET /integrations/whatsapp/qr` — status da sessão e QR em data-url.
 - `GET /integrations/whatsapp/groups` — grupos da sessão `postiz`.
+- `POST /integrations/whatsapp/connect-groups` — conecta vários grupos de uma vez.
 - Provedor `whatsapp`: autentica com o id do grupo; publica texto/imagem/vídeo.
+- UI: busca por nome, checkbox multi-select, grupos já conectados marcados.
+- Envio: menção invisível ligada por padrão; `maxConcurrentJob=1` + `WHATSAPP_SEND_DELAY_MS`.
 
 ## Depende de / Usado por
 - Depende: serviço WAHA interno (`WAHA_API_BASE_URL`, `WAHA_API_KEY`), teto `WHATSAPP_MENTION_CAP`.

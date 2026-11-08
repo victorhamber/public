@@ -30,7 +30,9 @@ type WahaGroup = {
 };
 
 export class WhatsappProvider extends SocialAbstract implements SocialProvider {
-  override maxConcurrentJob = 2;
+  // One WhatsApp send at a time across the worker pool, plus a delay in post()
+  // so scheduled posts to many groups do not fire in the same second.
+  override maxConcurrentJob = 1;
   identifier = 'whatsapp';
   name = 'WhatsApp';
   isBetweenSteps = false;
@@ -320,20 +322,32 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     return `${base}${path.startsWith('/') ? path : `/${path}`}`;
   }
 
+  private sendDelayMs() {
+    const raw = Number(process.env.WHATSAPP_SEND_DELAY_MS || 12000);
+    const base = Number.isFinite(raw) && raw >= 0 ? Math.floor(raw) : 12000;
+    // Small jitter so parallel schedules do not align on the same second.
+    const jitter = Math.floor(Math.random() * 4000);
+    return base + jitter;
+  }
+
   async post(
     id: string,
     accessToken: string,
     postDetails: PostDetails<WhatsappDto>[],
     _integration: Integration
   ): Promise<PostResponse[]> {
+    // Cadence between groups / scheduled sends.
+    await this.sleep(this.sendDelayMs());
+
     const [first] = postDetails;
     const chatId = accessToken || id;
     const text = this.plainText(first.message || '');
     const media = first.media || [];
-    const mention =
-      first.settings?.invisibleMention === true
-        ? await this.groupParticipants(chatId)
-        : [];
+    // Default on: notify participants without writing @name in the visible text.
+    const wantMention = first.settings?.invisibleMention !== false;
+    const mention = wantMention
+      ? await this.groupParticipants(chatId)
+      : [];
 
     // Above the cap: send without tagging everyone.
     const mentions =
