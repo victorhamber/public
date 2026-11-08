@@ -1,6 +1,6 @@
 services:
   postiz:
-    image: ghcr.io/gitroomhq/postiz-app:latest
+    image: ghcr.io/gitroomhq/postiz-app:v2.25.3
     container_name: postiz
     restart: always
     environment:
@@ -20,6 +20,10 @@ services:
       STORAGE_PROVIDER: 'local'
       UPLOAD_DIRECTORY: '/uploads'
       NEXT_PUBLIC_UPLOAD_DIRECTORY: '/uploads'
+
+      # WAHA desta instalação. Sessão nova; não apontar para Desk nem Zap.
+      WAHA_API_BASE_URL: 'http://waha:3000'
+      WAHA_API_KEY: '${WAHA_API_KEY}'
 
       # === Cloudflare (R2) Settings
       # STORAGE_PROVIDER: 'cloudflare'
@@ -247,6 +251,21 @@ services:
       - temporal
     tty: true
 
+  waha:
+    image: devlikeapro/waha:latest-2026.7.2
+    container_name: postiz-waha
+    restart: always
+    environment:
+      WAHA_API_KEY: 'sha512:${WAHA_API_KEY_SHA512}'
+      WHATSAPP_DEFAULT_ENGINE: NOWEB
+      WAHA_DASHBOARD_ENABLED: 'false'
+      WHATSAPP_RESTART_ALL_SESSIONS: 'True'
+    volumes:
+      - waha-sessions:/app/.sessions
+      - waha-media:/app/.media
+    networks:
+      - postiz-network
+
   temporal-ui:
     container_name: temporal-ui
     image: temporalio/ui:2.34.0
@@ -269,6 +288,12 @@ volumes:
     external: false
 
   postiz-uploads:
+    external: false
+
+  waha-sessions:
+    external: false
+
+  waha-media:
     external: false
 
 networks:

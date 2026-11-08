@@ -1,0 +1,10 @@
+---
+description: Token Economy — ler, mudar, gravar
+alwaysApply: true
+---
+
+Este projeto está integrado à Token Economy. Em todo pedido de mudança, siga este ciclo, sem o usuário chamar a skill de novo. A documentação já traz a conclusão: execute-a. Não reconstrua o projeto nem rediscuta decisão escrita. O mesmo contrato está em `AGENTS.md` na raiz, para Claude Code, Codex, ChatGPT com a pasta, Gemini e Antigravity. O detalhe mora em `ai-docs/`.
+
+1. Ler, antes de editar. Leia `AGENTS.md`, `ai-docs/STATE.md`, `ai-docs/MAP.md` e o `modules/<x>.md` da área. Sem `MAP.md`, rode o `init.py` da skill token-economy nesta raiz, documente a área que vai tocar e então siga com o pedido. Com MAP, rode `python ai-docs/tools/map_repo.py` e leia só a faixa de linhas que vai mudar. Não abra arquivo inteiro acima de 200 linhas.
+2. Mudar. Arquivo novo só na pasta definida em `ai-docs/CONVENTIONS.md`. Não invente local. Não mova arquivo existente sem o usuário pedir reestrutura.
+3. Gravar, sem exceção. Se doc e código divergirem, o código vence: corrija o doc. Não afirme nada sobre o projeto sem conferir no MAP ou no código. Atualize o módulo afetado, reescreva `ai-docs/STATE.md` (≤5 linhas), decisão não óbvia em `DECISIONS.md`, rode de novo `python ai-docs/tools/map_repo.py`, depois `--check` e `--ack`. Não encerre com documentação desatualizada.
