@@ -373,7 +373,7 @@
 - tumblr.provider.ts [653L] — TumblrProvider
 - twitch.provider.ts [293L] — TwitchProvider
 - vk.provider.ts [342L] — VkProvider
-- whatsapp.provider.ts [480L] — WhatsappProvider
+- whatsapp.provider.ts [497L] — WhatsappProvider
 - whop.provider.ts [431L] — WhopProvider
 - wordpress.provider.ts [380L] import FormData from 'form-data'; — WordpressProvider
 - x.provider.ts [1757L] — XProvider
@@ -541,7 +541,7 @@
 - translation.json [900L]
 
 ## libraries/react-shared-libraries/src/translation/locales/en/
-- translation.json [945L]
+- translation.json [1241L]
 
 ## libraries/react-shared-libraries/src/translation/locales/es/
 - translation.json [900L]
@@ -565,7 +565,7 @@
 - translation.json [900L]
 
 ## libraries/react-shared-libraries/src/translation/locales/pt/
-- translation.json [945L]
+- translation.json [1241L]
 
 ## libraries/react-shared-libraries/src/translation/locales/ru/
 - translation.json [900L]

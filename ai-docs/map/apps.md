@@ -638,7 +638,7 @@
 
 ## apps/frontend/src/components/platform-analytics/
 - platform.analytics.tsx [310L] — PlatformAnalytics()
-- render.analytics.tsx [255L]
+- render.analytics.tsx [276L]
 
 ## apps/frontend/src/components/plugs/
 - plug.tsx [281L] — convertBackRegex(), Plug()
@@ -662,7 +662,7 @@
 
 ## apps/frontend/src/components/public-api/
 - mcp.client.icons.tsx [542L] Logos for the MCP clients shown in Settings > Agents and in onboarding.
-- public.component.tsx [934L] Remote clients can't set headers, they get a URL to paste (hint = where) — getMcpOauthUrl(), CopyButton(), McpSection(), CliSection(), PublicApiContent(), PublicComponent()
+- public.component.tsx [943L] Remote clients can't set headers, they get a URL to paste (hint = where) — getMcpOauthUrl(), CopyButton(), McpSection(), CliSection(), PublicApiContent(), PublicComponent()
 
 ## apps/frontend/src/components/sets/
 - sets.tsx [222L]
@@ -674,7 +674,7 @@
 - email-notifications.component.tsx [174L] — useEmailNotifications(), EmailNotificationsComponent()
 - github.component.tsx [216L]
 - global.settings.tsx [31L] — GlobalSettings()
-- metric.component.tsx [98L] the list has names that aren't IANA timezones (Europe/Zaporizhzhia) — MetricComponent()
+- metric.component.tsx [97L] the list has names that aren't IANA timezones (Europe/Zaporizhzhia) — MetricComponent()
 - shortlink-preference.component.tsx [118L] — useShortlinkPreference(), ShortlinkPreferenceComponent()
 - signatures.component.tsx [271L]
 - teams.component.tsx [238L] — AddMember(), TeamsComponent()

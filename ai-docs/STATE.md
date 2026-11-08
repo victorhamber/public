@@ -2,11 +2,11 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- Correção do CI GitHub (useT fora de escopo) + Build só sob demanda.
+- Completar PT (chaves settings/agents/analytics + mapa sininho + JID WAHA) e redeploy.
 
 ## Próximos passos
-1. Push e confirmar Actions sem e-mail automático em push.
-2. Victor confere UI em PT.
+1. Push + deploy Easypanel.
+2. Victor confere streak, sininho, settings, análises, menu Agente.
 
 ## Bloqueios / dúvidas
 - Nenhum.

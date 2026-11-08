@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-08 — Lacuna de chaves PT + JID string no WhatsApp
+- Contexto: UI em `pt` ainda mostrava inglês porque `t(key, 'English')` não tinha entrada no JSON; sininho falhava em "published … at" sem URL; WAHA 500 `jid.endsWith is not a function`.
+- Decisão: preencher `pt/en` com as chaves da UI; mapa de notificação aceita URL vazia e provider antes do `:`; `groupParticipants` normaliza id para string com `@`.
+- Alternativas: deixar fallback EN (rejeitado); desligar menções invisíveis (piora alcance).
+- Consequência: redeploy do frontend/backend necessário para o usuário ver a mudança.
+
 ## 2026-11-08 — Build do GitHub só sob demanda
 - Contexto: cada push em `main` rodava `build.yml` e mandava e-mail de falha; o deploy real é no Easypanel.
 - Decisão: `on: workflow_dispatch` (+ PR/merge_group). Corrigir `useT` fora de escopo que quebrou o build da tradução.

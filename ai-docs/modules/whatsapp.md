@@ -29,6 +29,7 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 - Não apagar a sessão se `/groups` vier vazio: o store ainda pode estar sincronizando.
 - Chamadas ao WAHA usam `fetch` direto; o filtro SSRF do Postiz bloquearia a URL interna.
 - Acima do teto, envia sem marcar o grupo inteiro.
+- `groupParticipants` normaliza `id` para string com `@` (WAHA às vezes devolve objeto; senão `jid.endsWith` quebra).
 
 ## Como testar
 - Sem sessão: a tela mostra QR.

@@ -574,30 +574,36 @@ const McpSection = ({
 
 export const localCliSteps = [
   {
-    label: 'Install the CLI',
+    labelKey: 'install_the_cli' as const,
+    labelFallback: 'Install the CLI',
     code: 'npm install -g postiz',
   },
   {
-    label: 'Run: postiz auth:login',
+    labelKey: 'run_postiz_auth' as const,
+    labelFallback: 'Run: postiz auth:login',
     code: 'postiz auth:login',
   },
   {
-    label: 'Install the Postiz skill for your AI agent',
+    labelKey: 'install_postiz_skill' as const,
+    labelFallback: 'Install the Postiz skill for your AI agent',
     code: 'npx skills add gitroomhq/postiz-agent',
   },
 ] as const;
 
 const ciCliSteps = [
   {
-    label: 'Install the CLI',
+    labelKey: 'install_the_cli' as const,
+    labelFallback: 'Install the CLI',
     code: 'npm install -g postiz',
   },
   {
-    label: 'Set your API key as an environment variable',
+    labelKey: 'set_api_key_env' as const,
+    labelFallback: 'Set your API key as an environment variable',
     code: 'export POSTIZ_API_KEY="{API_KEY}"',
   },
   {
-    label: 'Install the Postiz skill for your AI agent',
+    labelKey: 'install_postiz_skill' as const,
+    labelFallback: 'Install the Postiz skill for your AI agent',
     code: 'npx skills add gitroomhq/postiz-agent',
   },
 ] as const;
@@ -609,9 +615,12 @@ const CliSection = ({ apiKey }: { apiKey: string }) => {
 
   const steps =
     mode === 'local'
-      ? localCliSteps.map((step) => ({ ...step }))
+      ? localCliSteps.map((step) => ({
+          label: t(step.labelKey, step.labelFallback),
+          code: step.code,
+        }))
       : ciCliSteps.map((step) => ({
-          ...step,
+          label: t(step.labelKey, step.labelFallback),
           code: step.code.replace('{API_KEY}', apiKey),
         }));
 

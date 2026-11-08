@@ -11,3 +11,6 @@ Propósito: português como idioma padrão deste fork Postiz.
 - Marcas (WhatsApp, Google) ficam iguais.
 - Workflows `v1.0.x`–`v1.1.1` não são iniciados; não precisam de tradução.
 - `useT()` precisa existir no mesmo componente que chama `t(` — senão o build do GitHub quebra.
+- Toda string nova com `t('key','English')` precisa de valor em `pt/translation.json`; senão a UI fica em inglês mesmo com locale `pt`.
+- Labels de analytics vêm da API em inglês; a UI traduz via mapa em `render.analytics.tsx`.
+- Scripts de preenchimento: `ai-docs/tools/_apply_pt_bulk.py` e `_force_priority_pt.py`.

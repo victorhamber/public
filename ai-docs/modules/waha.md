@@ -19,6 +19,7 @@ Propósito: sessão WhatsApp deste Postiz, acessível só pela rede interna.
 - Instância nova. Não apontar para o Desk nem para o Evolution do Zap.
 - Sem domínio público obrigatório.
 - Chave e QR não entram em doc.
+- Participant `id` pode ser objeto; o provedor força string antes de montar `mentions`.
 
 ## Como testar
 - Container up na rede interna.

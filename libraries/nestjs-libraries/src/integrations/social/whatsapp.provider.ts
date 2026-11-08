@@ -261,14 +261,31 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     }));
   }
 
+  private normalizeJid(raw: unknown): string {
+    if (typeof raw === 'string') {
+      return raw.trim();
+    }
+    if (raw && typeof raw === 'object') {
+      const obj = raw as Record<string, unknown>;
+      for (const key of ['_serialized', 'id', 'jid', 'user']) {
+        const value = obj[key];
+        if (typeof value === 'string' && value.trim()) {
+          return value.trim();
+        }
+      }
+    }
+    return '';
+  }
+
   private async groupParticipants(chatId: string): Promise<string[]> {
     try {
       const group = await this.wahaJson<WahaGroup>(
         `/api/${SESSION}/groups/${encodeURIComponent(chatId)}`
       );
+      // WAHA sometimes returns participant id as object; toJID needs a string.
       return (group.participants || [])
-        .map((p) => p.id)
-        .filter(Boolean)
+        .map((p) => this.normalizeJid(p?.id ?? p))
+        .filter((id) => id.includes('@'))
         .slice(0, this.mentionCap());
     } catch {
       return [];

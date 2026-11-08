@@ -12,11 +12,6 @@ import {
   browserTimezone,
   isTimezone,
 } from '@gitroom/frontend/components/layout/set.timezone';
-const dateMetrics = [
-  { label: 'AM:PM', value: 'US' },
-  { label: '24 hours', value: 'GLOBAL' },
-];
-
 // the list has names that aren't IANA timezones (Europe/Zaporizhzhia)
 const timezoneOptions = timezones.filter((zone) => isTimezone(zone.tzCode));
 
@@ -27,6 +22,10 @@ const MetricComponent = () => {
   const user = useUser();
   const [currentMetric, setCurrentMetric] = useState(isUSCitizen());
   const [timezone, setTimezone] = useState(user?.timezoneName || '');
+  const dateMetrics = [
+    { label: t('am_pm', 'AM:PM'), value: 'US' },
+    { label: t('twenty_four_hours', '24 hours'), value: 'GLOBAL' },
+  ];
   const changeMetric = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setCurrentMetric(value === 'US');
@@ -58,7 +57,7 @@ const MetricComponent = () => {
   );
   return (
     <div className="my-[16px] mt-[16px] bg-sixth border-fifth border rounded-[4px] p-[24px] flex flex-col gap-[24px]">
-      <div className="mt-[4px]">Date Metrics</div>
+      <div className="mt-[4px]">{t('date_metrics', 'Date Metrics')}</div>
       <Select name="metric" disableForm={true} label="" onChange={changeMetric} value={currentMetric ? 'US' : 'GLOBAL'}>
         {dateMetrics.map((metric) => (
           <option

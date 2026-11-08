@@ -48,13 +48,34 @@ const TrendIndicator: FC<{ value: number; average?: boolean }> = ({
   );
 };
 
+const ANALYTICS_LABEL_KEYS: Record<string, [string, string]> = {
+  'Page Impressions': ['page_impressions', 'Page Impressions'],
+  'Media views': ['media_views', 'Media views'],
+  'Media Views': ['media_views', 'Media views'],
+  'Posts Engagement': ['posts_engagement', 'Posts Engagement'],
+  'Page followers': ['page_followers', 'Page followers'],
+  Impressions: ['impressions', 'Impressions'],
+  Views: ['views', 'Views'],
+  Likes: ['likes', 'Likes'],
+  Comments: ['comments', 'Comments'],
+  Shares: ['shares', 'Shares'],
+  Followers: ['followers', 'Followers'],
+  Engagement: ['engagement', 'Engagement'],
+  Saves: ['saves', 'Saves'],
+  Retweets: ['retweets', 'Retweets'],
+  Replies: ['replies', 'Replies'],
+};
+
 const AnalyticsCard: FC<{
   item: AnalyticsDataItem;
   total: string | number;
   index: number;
 }> = ({ item, total, index }) => {
+  const t = useT();
   const colorVariants = ['purple', 'green', 'blue'] as const;
   const color = colorVariants[index % colorVariants.length];
+  const labelKey = ANALYTICS_LABEL_KEYS[item.label];
+  const label = labelKey ? t(labelKey[0], labelKey[1]) : item.label;
 
   const hasDataPoints = item.data.length >= 1;
 
@@ -83,7 +104,7 @@ const AnalyticsCard: FC<{
               `}
             />
             <span className="text-[15px] font-medium text-newTableText">
-              {item.label}
+              {label}
             </span>
           </div>
           {item.percentageChange !== undefined && (

@@ -5,7 +5,7 @@ Propósito: código do Postiz v2.25.3, mantido como base do fork. O CLAUDE.md or
 ## API pública
 - Canais existentes ficam no gerenciador de integrações. WhatsApp entra por um provedor novo, documentado em `modules/whatsapp.md`.
 - Save de post: `WhatsappDto` precisa estar em `all.providers.settings` senão `mapTypeToPost` rejeita `__type`. Toast do modal agora mostra `message[]` do Nest.
-- Locale: `fallbackLng=pt`; toasts/dialogs via `t()`; notificações do workflow/e-mails em PT; `translate.notification.ts` cobre mensagens EN antigas no sininho.
+- Locale: `fallbackLng=pt`; chaves de settings/agents/analytics em `pt/translation.json`; `translate.notification.ts` cobre sininho EN (URL vazia / erro WAHA); labels de analytics traduzidos na UI.
 - CI: `.github/workflows/build.yml` só sob demanda (`workflow_dispatch`); deploy real no Easypanel.
 
 ## Depende de / Usado por
