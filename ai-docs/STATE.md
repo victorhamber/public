@@ -2,11 +2,11 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- Tradução PT: deploy do fork (UI default PT, notificações/e-mails/servidor).
+- Nada. Tradução PT no ar (default i18n, notificações, e-mails, toasts).
 
 ## Próximos passos
-1. Confirmar sininho, streak e toasts em português após o deploy.
-2. Reportar qualquer tela ainda em inglês.
+1. Victor dá F5 e confere streak/sininho/toasts.
+2. Avisar se alguma tela específica ainda sair em inglês.
 
 ## Bloqueios / dúvidas
 - Nenhum.
