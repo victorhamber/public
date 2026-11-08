@@ -3,6 +3,7 @@ import { Web3ProviderInterface } from '@gitroom/frontend/components/launches/web
 import { WrapcasterProvider } from '@gitroom/frontend/components/launches/web3/providers/wrapcaster.provider';
 import { TelegramProvider } from '@gitroom/frontend/components/launches/web3/providers/telegram.provider';
 import { MoltbookProvider } from '@gitroom/frontend/components/launches/web3/providers/moltbook.provider';
+import { WhatsappProvider } from '@gitroom/frontend/components/launches/web3/providers/whatsapp.provider';
 export const web3List: {
   identifier: string;
   component: FC<Web3ProviderInterface>;
@@ -10,6 +11,10 @@ export const web3List: {
   {
     identifier: 'telegram',
     component: TelegramProvider,
+  },
+  {
+    identifier: 'whatsapp',
+    component: WhatsappProvider,
   },
   {
     identifier: 'wrapcast',

@@ -3,23 +3,23 @@ Fontes: docker-compose.yaml, .env.example
 Propósito: sessão WhatsApp deste Postiz, acessível só pela rede interna.
 
 ## API pública
-- Ainda não há cliente no repositório. O provedor WhatsApp será o único chamador.
-- Operações previstas: abrir sessão, obter QR code, ler status, listar grupos, enviar texto, imagem e vídeo com menções.
+- Cliente: `whatsapp.provider.ts`.
+- Operações: abrir sessão `postiz`, QR, status, listar grupos, enviar texto/imagem/vídeo com menções.
 
 ## Depende de / Usado por
-- Depende: volume próprio da sessão e uma chave de API.
+- Depende: volumes `waha-sessions` e `waha-media`, chave em hash no container.
 - Usado por: `modules/whatsapp.md`.
 
-## Fluxo (só se não for trivial)
-1. O serviço `waha` sobe ao lado do Postiz, Postgres, Redis e Temporal. Motor NOWEB, dashboard desligado.
-2. Postiz guarda URL interna e chave em variável de ambiente.
-3. A sessão persiste no volume. Reiniciar o container não pede QR de novo, salvo logout.
+## Fluxo
+1. No Easypanel o serviço `waha` sobe com imagem `devlikeapro/waha:latest-2026.7.2`, motor NOWEB, dashboard desligado.
+2. Postiz fala em `http://$(PROJECT_NAME)_waha:3000` com `WAHA_API_KEY` em texto.
+3. A sessão persiste no volume. Reiniciar não pede QR de novo, salvo logout.
 
 ## Invariantes e armadilhas
-- Instância nova. Não apontar para o WAHA já usado pelo Desk nem para o Evolution do Zap.
-- Chave e QR não entram em doc, log de exemplo ou teste.
-- WAHA e Postiz na mesma rede do compose. Sem porta pública obrigatória para o WAHA.
+- Instância nova. Não apontar para o Desk nem para o Evolution do Zap.
+- Sem domínio público obrigatório.
+- Chave e QR não entram em doc.
 
 ## Como testar
-- Sobe, responde na rede interna e devolve QR code para uma sessão nova.
-- Segundo start com o volume intacto permanece conectado.
+- Container up na rede interna.
+- `/api/sessions/postiz` responde depois do primeiro QR.

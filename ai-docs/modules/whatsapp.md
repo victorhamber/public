@@ -1,27 +1,27 @@
 # whatsapp
-Fontes: AGENTS.md, ai-docs/ARCHITECTURE.md, ai-docs/DECISIONS.md
-Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção invisível. O fork já existe; o provedor ainda não.
+Fontes: AGENTS.md, libraries/nestjs-libraries/src/integrations/social/whatsapp.provider.ts, libraries/nestjs-libraries/src/dtos/posts/providers-settings/whatsapp.dto.ts, libraries/nestjs-libraries/src/integrations/integration.manager.ts, apps/backend/src/api/routes/integrations.controller.ts, apps/frontend/src/components/launches/web3/providers/whatsapp.provider.tsx, apps/frontend/src/components/launches/web3/web3.list.tsx, apps/frontend/src/components/new-launch/providers/whatsapp/whatsapp.provider.tsx, apps/frontend/src/components/new-launch/providers/show.all.providers.tsx, apps/frontend/public/icons/platforms/whatsapp.png
+Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção invisível.
 
 ## API pública
-- Ainda não existe. Ao implementar, expor só: iniciar sessão, ler status, listar grupos, gravar grupos escolhidos, enviar texto e mídia.
+- `GET /integrations/whatsapp/qr` — status da sessão e QR em data-url.
+- `GET /integrations/whatsapp/groups` — grupos da sessão `postiz`.
+- Provedor `whatsapp`: autentica com o id do grupo; publica texto/imagem/vídeo.
 
 ## Depende de / Usado por
-- Depende: módulo `waha`, agenda e fila já existentes do Postiz.
-- Usado por: tela Adicionar canal e o editor de publicação.
+- Depende: serviço WAHA interno (`WAHA_API_BASE_URL`, `WAHA_API_KEY`), teto `WHATSAPP_MENTION_CAP`.
+- Usado por: Add Channel (web3) e o editor de publicação.
 
-## Fluxo (só se não for trivial)
-1. Adicionar canal → WhatsApp cria a sessão e mostra o QR code.
-2. Status conectado libera a lista de grupos. Cada grupo marcado vira um canal.
-3. Publicar manda texto, imagem ou vídeo para o grupo.
-4. Menção invisível: corpo sem `@nome`; participantes dentro do teto vão no campo de menções.
+## Fluxo
+1. Add Channel → WhatsApp inicia a sessão e mostra o QR.
+2. Status `WORKING` libera a lista de grupos. Cada grupo marcado vira um canal.
+3. Publicar manda texto/mídia. Com `invisibleMention`, JIDs vão no campo de menções até o teto.
 
 ## Invariantes e armadilhas
-- Um número por instalação. Novo QR substitui a sessão.
-- Não usar a sessão do Desk nem a do Zap.
-- Grupo acima do teto sai sem marcar todo mundo.
-- Canal removido no celular continua no Postiz até atualizar a lista. Envio para grupo ausente mostra erro nesse canal.
+- Sessão fixa `postiz`. Não apontar para o WAHA do Desk.
+- Chamadas ao WAHA usam `fetch` direto; o filtro SSRF do Postiz bloquearia a URL interna.
+- Acima do teto, envia sem marcar o grupo inteiro.
 
 ## Como testar
-- Sem sessão: a tela mostra o QR code e não lista grupo.
-- Com sessão e zero grupos: estado vazio, sem quebrar os outros canais.
-- Envio: texto visível sem arroba; menções só no campo da API, até o teto.
+- Sem sessão: a tela mostra QR.
+- Com sessão: lista grupos e completa o canal.
+- Envio: texto sem `@nome`; menções só no payload quando a opção está ligada.

@@ -22,6 +22,7 @@ import BlueskyProvider from '@gitroom/frontend/components/new-launch/providers/b
 import LemmyProvider from '@gitroom/frontend/components/new-launch/providers/lemmy/lemmy.provider';
 import WarpcastProvider from '@gitroom/frontend/components/new-launch/providers/warpcast/warpcast.provider';
 import TelegramProvider from '@gitroom/frontend/components/new-launch/providers/telegram/telegram.provider';
+import WhatsappProvider from '@gitroom/frontend/components/new-launch/providers/whatsapp/whatsapp.provider';
 import NostrProvider from '@gitroom/frontend/components/new-launch/providers/nostr/nostr.provider';
 import VkProvider from '@gitroom/frontend/components/new-launch/providers/vk/vk.provider';
 import { useLaunchStore } from '@gitroom/frontend/components/new-launch/store';
@@ -141,6 +142,10 @@ export const Providers = [
   {
     identifier: 'telegram',
     component: TelegramProvider,
+  },
+  {
+    identifier: 'whatsapp',
+    component: WhatsappProvider,
   },
   {
     identifier: 'nostr',

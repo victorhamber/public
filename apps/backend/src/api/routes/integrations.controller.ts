@@ -30,6 +30,7 @@ import {
 
 import { timer } from '@gitroom/helpers/utils/timer';
 import { TelegramProvider } from '@gitroom/nestjs-libraries/integrations/social/telegram.provider';
+import { WhatsappProvider } from '@gitroom/nestjs-libraries/integrations/social/whatsapp.provider';
 import { MoltbookProvider } from '@gitroom/nestjs-libraries/integrations/social/moltbook.provider';
 import {
   AuthorizationActions,
@@ -499,6 +500,25 @@ export class IntegrationsController {
   @Get('/telegram/updates')
   async getUpdates(@Query() query: { word: string; id?: number }) {
     return new TelegramProvider().getBotId(query);
+  }
+
+  @Get('/whatsapp/qr')
+  async whatsappQr() {
+    try {
+      return await new WhatsappProvider().getQr();
+    } catch (err: any) {
+      return { error: err?.message || 'WAHA unavailable' };
+    }
+  }
+
+  @Get('/whatsapp/groups')
+  async whatsappGroups() {
+    try {
+      const groups = await new WhatsappProvider().listGroups();
+      return { groups };
+    } catch (err: any) {
+      return { error: err?.message || 'WAHA unavailable', groups: [] };
+    }
   }
 
   @Post('/moltbook/register')

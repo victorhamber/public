@@ -2,7 +2,7 @@
 <!-- Máx. 60 linhas. Só o que a IA precisa SEMPRE. Detalhe mora em ai-docs/. -->
 
 ## O que é
-Fork do Postiz v2.25.3 com WhatsApp nativo, via WAHA no mesmo compose. Publica em grupos escolhidos depois de um QR code. O provedor ainda não está no código.
+Fork do Postiz v2.25.3 com WhatsApp nativo, via WAHA. Publica em grupos escolhidos depois de um QR code.
 
 ## Ciclo de toda mudança — automático, sem o usuário pedir
 **Ler** (antes de editar; pare quando souber o suficiente)
@@ -22,7 +22,7 @@ Fork do Postiz v2.25.3 com WhatsApp nativo, via WAHA no mesmo compose. Publica e
 - Código e MAP são a verdade. Se o doc divergir, corrija o doc.
 - Não afirme função, arquivo, input ou comportamento sem ter conferido no MAP ou no trecho do código.
 - Não sabe? Procure (grep/símbolo) ou pergunte. Não preencha lacuna com suposição, nem no código nem no doc.
-- O provedor WhatsApp ainda não existe. Confirme o arquivo no MAP antes de registrar um canal.
+- Confirme o arquivo no MAP antes de alterar o canal WhatsApp.
 
 ## Economia de tokens
 - Busque antes de abrir. Abra só a faixa de linhas; nunca arquivo inteiro >200 linhas.
