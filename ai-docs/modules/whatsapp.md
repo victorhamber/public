@@ -10,7 +10,8 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 - Provedor `whatsapp`: autentica com o id do grupo; publica texto/imagem/vídeo.
 - `WhatsappDto` registrado em `all.providers.settings` (sem isso, salvar post quebra com `__type`).
 - UI: busca por nome, checkbox multi-select, grupos já conectados marcados.
-- Envio: menção invisível ligada por padrão; `maxConcurrentJob=1` + `WHATSAPP_SEND_DELAY_MS`.
+- Envio: menção invisível = `mentions:["all"]` (WAHA); `maxConcurrentJob=1` + `WHATSAPP_SEND_DELAY_MS`.
+- Mídia: `updateMedia` grava `type:'image'` sempre — o provedor detecta vídeo pela extensão e chama `sendVideo` + `convert:true`.
 - Foto: `GET .../groups/{id}/picture` (fallback chats) baixada como data-url no `authenticate`.
 
 ## Depende de / Usado por
@@ -28,8 +29,8 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 - Não dar PUT na sessão a cada poll do QR: isso reinicia e fica em `STARTING`.
 - Não apagar a sessão se `/groups` vier vazio: o store ainda pode estar sincronizando.
 - Chamadas ao WAHA usam `fetch` direto; o filtro SSRF do Postiz bloquearia a URL interna.
-- Acima do teto, envia sem marcar o grupo inteiro.
-- `groupParticipants` normaliza `id` para string com `@` (WAHA às vezes devolve objeto; senão `jid.endsWith` quebra).
+- Não mandar vídeo por `sendImage` (Sharp: unsupported image format); Instagram/Telegram cheiram mime, o Postiz `type` não.
+- Menção por lista de JIDs sem `@número` no texto não pinga; use `["all"]`.
 
 ## Como testar
 - Sem sessão: a tela mostra QR.

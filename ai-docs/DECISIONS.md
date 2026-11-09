@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-09 — Vídeo WAHA via sendVideo + mentions all
+- Contexto: publicação com vídeo nos grupos falhou; log WAHA `sendImage` + Sharp `unsupported image format`. Menção individual sem `@` no texto não pingava.
+- Decisão: detectar vídeo pela extensão (porque `updateMedia` fixa `type:'image'`); `sendVideo` + `convert:true`; `mentions:["all"]` quando invisibleMention.
+- Alternativas: corrigir `updateMedia` global (risco em outros canais); lista de JIDs (já quebrou com objeto/`endsWith`).
+- Consequência: redeploy do Postiz; reenviar o vídeo nos grupos WhatsApp.
+
 ## 2026-11-08 — Deploy PT: typecheck após Turbopack
 - Contexto: sem `t` duplicado o compile passou; o typecheck ainda caiu em `ContinueModal` sem `useT` e regex `/is` (target `es2015`).
 - Decisão: `useT` em `ContinueModal`; detalhe WAHA com `[\s\S]` + flag `i` só.

@@ -19,7 +19,8 @@ Propósito: sessão WhatsApp deste Postiz, acessível só pela rede interna.
 - Instância nova. Não apontar para o Desk nem para o Evolution do Zap.
 - Sem domínio público obrigatório.
 - Chave e QR não entram em doc.
-- Participant `id` pode ser objeto; o provedor força string antes de montar `mentions`.
+- `mentions:["all"]` no sendText/Image/Video força notificação no grupo sem `@nome` no texto.
+- Vídeo: `POST /api/sendVideo` com `convert:true` + mimetype; Core NOWEB aceita URL pública.
 
 ## Como testar
 - Container up na rede interna.

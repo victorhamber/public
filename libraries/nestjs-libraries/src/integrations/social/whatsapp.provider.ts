@@ -398,6 +398,48 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     return `${base}${path.startsWith('/') ? path : `/${path}`}`;
   }
 
+  // updateMedia() hardcodes type:'image' for every attachment, so Telegram
+  // sniffs mime and we must sniff the path/url here before calling WAHA.
+  private isVideoMedia(item: {
+    type?: string;
+    path?: string;
+    url?: string;
+  }) {
+    if (item.type === 'video') {
+      return true;
+    }
+    const src = String(item.url || item.path || '')
+      .toLowerCase()
+      .split('?')[0];
+    return /\.(mp4|mov|webm|m4v|mkv)$/.test(src);
+  }
+
+  private mediaPublicUrl(item: { path?: string; url?: string }) {
+    const candidate = String(item.url || item.path || '');
+    if (/^https?:\/\//i.test(candidate)) {
+      return candidate;
+    }
+    return this.publicMediaUrl(candidate);
+  }
+
+  private mediaFileMeta(
+    item: { path?: string; url?: string },
+    video: boolean
+  ) {
+    const src = String(item.url || item.path || '');
+    const filename =
+      src.split(/[/\\]/).pop()?.split('?')[0] ||
+      (video ? 'video.mp4' : 'image.jpg');
+    const lower = filename.toLowerCase();
+    let mimetype = video ? 'video/mp4' : 'image/jpeg';
+    if (lower.endsWith('.png')) mimetype = 'image/png';
+    else if (lower.endsWith('.webp')) mimetype = 'image/webp';
+    else if (lower.endsWith('.gif')) mimetype = 'image/gif';
+    else if (lower.endsWith('.webm')) mimetype = 'video/webm';
+    else if (lower.endsWith('.mov')) mimetype = 'video/quicktime';
+    return { filename, mimetype };
+  }
+
   private sendDelayMs() {
     const raw = Number(process.env.WHATSAPP_SEND_DELAY_MS || 12000);
     const base = Number.isFinite(raw) && raw >= 0 ? Math.floor(raw) : 12000;
@@ -419,15 +461,10 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
     const chatId = accessToken || id;
     const text = this.plainText(first.message || '');
     const media = first.media || [];
-    // Default on: notify participants without writing @name in the visible text.
+    // WAHA: mentions:["all"] notifies the group without @name in the text.
+    // Listing JIDs without @digits in the body does not force the ping.
     const wantMention = first.settings?.invisibleMention !== false;
-    const mention = wantMention
-      ? await this.groupParticipants(chatId)
-      : [];
-
-    // Above the cap: send without tagging everyone.
-    const mentions =
-      mention.length > 0 && mention.length <= this.mentionCap() ? mention : [];
+    const mentions = wantMention ? (['all'] as string[]) : [];
 
     try {
       if (media.length === 0) {
@@ -460,18 +497,24 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
 
       const responses: PostResponse[] = [];
       for (let i = 0; i < media.length; i++) {
-        const item = media[i];
+        const item = media[i] as {
+          type?: string;
+          path: string;
+          url?: string;
+        };
         const caption = i === 0 ? text : '';
-        const url = this.publicMediaUrl(item.path);
-        const endpoint =
-          item.type === 'video' ? '/api/sendVideo' : '/api/sendImage';
+        const url = this.mediaPublicUrl(item);
+        const video = this.isVideoMedia(item);
+        const { filename, mimetype } = this.mediaFileMeta(item, video);
+        const endpoint = video ? '/api/sendVideo' : '/api/sendImage';
         const sent = await this.wahaJson<any>(endpoint, {
           method: 'POST',
           body: JSON.stringify({
             session: SESSION,
             chatId,
             caption,
-            file: { url },
+            file: { url, filename, mimetype },
+            ...(video ? { convert: true } : {}),
             ...(mentions.length && i === 0 ? { mentions } : {}),
           }),
         });

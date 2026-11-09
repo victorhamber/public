@@ -1,12 +1,12 @@
 # Estado atual — postiz-whatsapp
-Atualizado: 2026-11-08
+Atualizado: 2026-11-09
 
 ## Em andamento
-- Deploy PT no ar (`bb247e5a`). Victor valida streak, sininho, settings, análises, Agente.
+- Fix vídeo/menção WhatsApp: `sendVideo`+`convert` e `mentions:["all"]` (updateMedia marcava tudo image).
 
 ## Próximos passos
-1. Hard refresh em `post.trajettu.com` com idioma PT.
-2. Reportar qualquer string EN restante.
+1. Push + Implantar Easypanel.
+2. Victor republica o vídeo nos grupos e confere ping.
 
 ## Bloqueios / dúvidas
 - Nenhum.

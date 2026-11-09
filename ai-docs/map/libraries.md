@@ -373,7 +373,7 @@
 - tumblr.provider.ts [653L] — TumblrProvider
 - twitch.provider.ts [293L] — TwitchProvider
 - vk.provider.ts [342L] — VkProvider
-- whatsapp.provider.ts [497L] — WhatsappProvider
+- whatsapp.provider.ts [540L] — WhatsappProvider
 - whop.provider.ts [431L] — WhopProvider
 - wordpress.provider.ts [380L] import FormData from 'form-data'; — WordpressProvider
 - x.provider.ts [1757L] — XProvider
