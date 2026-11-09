@@ -390,6 +390,106 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
       .trim();
   }
 
+  private extractHttpUrl(text: string): string | null {
+    const match = text.match(/https?:\/\/[^\s<>"']+/i);
+    return match ? match[0].replace(/[),.\]]+$/, '') : null;
+  }
+
+  private isYoutubeUrl(url: string): boolean {
+    try {
+      const host = new URL(url).hostname.toLowerCase();
+      return (
+        host === 'youtu.be' ||
+        host.endsWith('.youtu.be') ||
+        host === 'youtube.com' ||
+        host.endsWith('.youtube.com')
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  // YouTube often blocks WAHA's automatic scrape; oEmbed is the public metadata API.
+  private async youtubeOEmbed(url: string): Promise<{
+    title: string;
+    description: string;
+    imageUrl: string;
+  } | null> {
+    try {
+      const res = await fetch(
+        `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(
+          url
+        )}`,
+        { signal: AbortSignal.timeout(8000) }
+      );
+      if (!res.ok) {
+        return null;
+      }
+      const data = (await res.json()) as {
+        title?: string;
+        author_name?: string;
+        thumbnail_url?: string;
+      };
+      if (!data.title || !data.thumbnail_url) {
+        return null;
+      }
+      return {
+        title: data.title,
+        description: data.author_name || 'YouTube',
+        imageUrl: data.thumbnail_url,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private async sendTextMessage(
+    chatId: string,
+    text: string,
+    mentions: string[]
+  ) {
+    const mentionPayload = mentions.length ? { mentions } : {};
+    const url = this.extractHttpUrl(text);
+
+    if (url && this.isYoutubeUrl(url)) {
+      const preview = await this.youtubeOEmbed(url);
+      if (preview) {
+        try {
+          return await this.wahaJson<any>('/api/send/link-custom-preview', {
+            method: 'POST',
+            body: JSON.stringify({
+              session: SESSION,
+              chatId,
+              text,
+              linkPreviewHighQuality: true,
+              preview: {
+                url,
+                title: preview.title,
+                description: preview.description,
+                image: { url: preview.imageUrl },
+              },
+              ...mentionPayload,
+            }),
+          });
+        } catch {
+          // Fall back to auto preview below.
+        }
+      }
+    }
+
+    return this.wahaJson<any>('/api/sendText', {
+      method: 'POST',
+      body: JSON.stringify({
+        session: SESSION,
+        chatId,
+        text,
+        linkPreview: true,
+        linkPreviewHighQuality: true,
+        ...mentionPayload,
+      }),
+    });
+  }
+
   private publicMediaUrl(path: string) {
     if (path.startsWith('http://') || path.startsWith('https://')) {
       return path;
@@ -476,15 +576,7 @@ export class WhatsappProvider extends SocialAbstract implements SocialProvider {
             'WhatsApp post needs text or media'
           );
         }
-        const sent = await this.wahaJson<any>('/api/sendText', {
-          method: 'POST',
-          body: JSON.stringify({
-            session: SESSION,
-            chatId,
-            text,
-            ...(mentions.length ? { mentions } : {}),
-          }),
-        });
+        const sent = await this.sendTextMessage(chatId, text, mentions);
         return [
           {
             id: first.id,

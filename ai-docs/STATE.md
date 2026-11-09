@@ -2,11 +2,11 @@
 Atualizado: 2026-11-09
 
 ## Em andamento
-- Fix vídeo/menção WhatsApp no ar (`488c51a5`). Victor republica o vídeo nos grupos.
+- Preview YouTube no WhatsApp: oEmbed + `link-custom-preview` / `linkPreview` no sendText.
 
 ## Próximos passos
-1. Victor testa: vídeo chega + ping de menção no grupo silenciado.
-2. Se falhar, olhar log WAHA por `sendVideo` (não `sendImage`).
+1. Push + Implantar Easypanel.
+2. Victor posta de novo um link YouTube só-texto num grupo e confere thumbnail.
 
 ## Bloqueios / dúvidas
 - Nenhum.

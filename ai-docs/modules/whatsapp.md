@@ -11,6 +11,7 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 - `WhatsappDto` registrado em `all.providers.settings` (sem isso, salvar post quebra com `__type`).
 - UI: busca por nome, checkbox multi-select, grupos já conectados marcados.
 - Envio: menção invisível = `mentions:["all"]` (WAHA); `maxConcurrentJob=1` + `WHATSAPP_SEND_DELAY_MS`.
+- Links: `sendText` com `linkPreview` + `linkPreviewHighQuality`; YouTube usa oEmbed → `/api/send/link-custom-preview`.
 - Mídia: `updateMedia` grava `type:'image'` sempre — o provedor detecta vídeo pela extensão e chama `sendVideo` + `convert:true`.
 - Foto: `GET .../groups/{id}/picture` (fallback chats) baixada como data-url no `authenticate`.
 
@@ -21,7 +22,7 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 ## Fluxo
 1. Add Channel → WhatsApp inicia a sessão e mostra o QR.
 2. Status `WORKING` libera a lista de grupos. Cada grupo marcado vira um canal.
-3. Publicar manda texto/mídia. Com `invisibleMention`, JIDs vão no campo de menções até o teto.
+3. Publicar manda texto/mídia. Com `invisibleMention`, payload leva `mentions:["all"]`.
 
 ## Invariantes e armadilhas
 - Sessão fixa `postiz`. Não apontar para o WAHA do Desk.
@@ -31,6 +32,7 @@ Propósito: canal nativo de grupos de WhatsApp no Postiz, com QR code e menção
 - Chamadas ao WAHA usam `fetch` direto; o filtro SSRF do Postiz bloquearia a URL interna.
 - Não mandar vídeo por `sendImage` (Sharp: unsupported image format); Instagram/Telegram cheiram mime, o Postiz `type` não.
 - Menção por lista de JIDs sem `@número` no texto não pinga; use `["all"]`.
+- Sem `linkPreview`, o WAHA manda link cru; YouTube costuma bloquear scrape automático.
 
 ## Como testar
 - Sem sessão: a tela mostra QR.

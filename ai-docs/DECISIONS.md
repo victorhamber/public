@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-09 — Preview de link YouTube no WhatsApp
+- Contexto: link YouTube nos grupos saía cru; no celular o WhatsApp monta thumbnail.
+- Decisão: `linkPreview` + `linkPreviewHighQuality` no `sendText`; YouTube via oEmbed → `send/link-custom-preview`.
+- Alternativas: só flag auto (YouTube bloqueia bot); scrape OG próprio (mais frágil).
+- Consequência: texto-only com URL ganha card; mídia+caption ainda depende do WAHA/WhatsApp.
+
 ## 2026-11-09 — Vídeo WAHA via sendVideo + mentions all
 - Contexto: publicação com vídeo nos grupos falhou; log WAHA `sendImage` + Sharp `unsupported image format`. Menção individual sem `@` no texto não pingava.
 - Decisão: detectar vídeo pela extensão (porque `updateMedia` fixa `type:'image'`); `sendVideo` + `convert:true`; `mentions:["all"]` quando invisibleMention.

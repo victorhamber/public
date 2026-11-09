@@ -21,6 +21,7 @@ Propósito: sessão WhatsApp deste Postiz, acessível só pela rede interna.
 - Chave e QR não entram em doc.
 - `mentions:["all"]` no sendText/Image/Video força notificação no grupo sem `@nome` no texto.
 - Vídeo: `POST /api/sendVideo` com `convert:true` + mimetype; Core NOWEB aceita URL pública.
+- Preview: `linkPreview`/`linkPreviewHighQuality` no `sendText`; YouTube → `send/link-custom-preview` com oEmbed.
 
 ## Como testar
 - Container up na rede interna.

@@ -772,7 +772,7 @@
 "libraries/nestjs-libraries/src/integrations/social/tumblr.provider.ts": "4f579f50e8c8",
 "libraries/nestjs-libraries/src/integrations/social/twitch.provider.ts": "9c571e241450",
 "libraries/nestjs-libraries/src/integrations/social/vk.provider.ts": "bd10e277d5ef",
-"libraries/nestjs-libraries/src/integrations/social/whatsapp.provider.ts": "742739f531e3",
+"libraries/nestjs-libraries/src/integrations/social/whatsapp.provider.ts": "31b9be4625c3",
 "libraries/nestjs-libraries/src/integrations/social/whop.provider.ts": "2821cc67adb6",
 "libraries/nestjs-libraries/src/integrations/social/wordpress.provider.ts": "ef790ddd0118",
 "libraries/nestjs-libraries/src/integrations/social/x.provider.ts": "23e224f35227",
