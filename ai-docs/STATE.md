@@ -2,11 +2,11 @@
 Atualizado: 2026-11-08
 
 ## Em andamento
-- Completar PT (chaves settings/agents/analytics + mapa sininho + JID WAHA) e redeploy.
+- Correção do build: `useT` duplicado em `third-party.list` derrubava o deploy PT no Easypanel.
 
 ## Próximos passos
-1. Push + deploy Easypanel.
+1. Push + Implantar no Easypanel (build verde).
 2. Victor confere streak, sininho, settings, análises, menu Agente.
 
 ## Bloqueios / dúvidas
-- Nenhum.
+- Live ainda no commit WhatsApp avatars até o deploy PT passar.

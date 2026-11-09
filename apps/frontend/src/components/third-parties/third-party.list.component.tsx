@@ -72,10 +72,8 @@ export const ApiModal: FC<{
 
       setLoading(false);
     },
-    [props]
+    [props, t]
   );
-
-  const t = useT();
 
   return (
     <div className="relative">

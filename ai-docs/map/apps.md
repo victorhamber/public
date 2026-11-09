@@ -686,7 +686,7 @@
 - slider.component.tsx [72L]
 - third-party.component.tsx [162L] — ThirdPartyComponent()
 - third-party.function.tsx [89L] — useThirdPartySubmit(), useThirdPartyFunction(), useThirdPartyFunctionSWR()
-- third-party.list.component.tsx [169L]
+- third-party.list.component.tsx [167L]
 - third-party.media-library.tsx [292L]
 - third-party.media.tsx [228L] — useThirdParty()
 - third-party.wrapper.tsx [16L]

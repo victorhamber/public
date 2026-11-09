@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-08 — Deploy PT falhava por `t` duplicado
+- Contexto: três deploys Easypanel com a tradução caíram em ~4–6 min; live ficava no commit WhatsApp avatars.
+- Decisão: remover o segundo `const t = useT()` em `third-party.list.component.tsx` (`ApiModal`).
+- Alternativas: renomear a segunda variável (desnecessário).
+- Consequência: `next build` deixa de abortar com `the name t is defined multiple times`.
+
 ## 2026-11-08 — Lacuna de chaves PT + JID string no WhatsApp
 - Contexto: UI em `pt` ainda mostrava inglês porque `t(key, 'English')` não tinha entrada no JSON; sininho falhava em "published … at" sem URL; WAHA 500 `jid.endsWith is not a function`.
 - Decisão: preencher `pt/en` com as chaves da UI; mapa de notificação aceita URL vazia e provider antes do `:`; `groupParticipants` normaliza id para string com `@`.
