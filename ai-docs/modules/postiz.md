@@ -6,7 +6,7 @@ Propósito: código do Postiz v2.25.3, mantido como base do fork. O CLAUDE.md or
 - Canais existentes ficam no gerenciador de integrações. WhatsApp entra por um provedor novo, documentado em `modules/whatsapp.md`.
 - Save de post: `WhatsappDto` precisa estar em `all.providers.settings` senão `mapTypeToPost` rejeita `__type`. Toast do modal agora mostra `message[]` do Nest.
 - Locale: `fallbackLng=pt`; chaves de settings/agents/analytics em `pt/translation.json`; `translate.notification.ts` cobre sininho EN (URL vazia / erro WAHA); labels de analytics traduzidos na UI.
-- Deploy Easypanel usa `Dockerfile.dev` + `pnpm run build`; `const t = useT()` duplicado (ex.: `third-party.list`) derruba o `next build`.
+- Deploy Easypanel usa `Dockerfile.dev` + `pnpm run build`; `useT` duplicado/ausente (ex.: `third-party.list`, `ContinueModal`) e regex `/s` em `translate.notification` derrubam o typecheck.
 - CI: `.github/workflows/build.yml` só sob demanda (`workflow_dispatch`); deploy real no Easypanel.
 
 ## Depende de / Usado por

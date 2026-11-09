@@ -12,6 +12,8 @@ Propósito: português como idioma padrão deste fork Postiz.
 - Workflows `v1.0.x`–`v1.1.1` não são iniciados; não precisam de tradução.
 - `useT()` precisa existir no mesmo componente que chama `t(` — senão o build quebra.
 - Não declarar `const t = useT()` duas vezes no mesmo componente; Turbopack falha com `the name t is defined multiple times` e o Easypanel cai no `next build`.
+- Todo componente que chama `t(` precisa do próprio `useT()` (closures não herdam tipo).
+- Regex do mapa de notificação: sem flag `s` (`target` é `es2015`); use `[\s\S]` para multilinha.
 - Toda string nova com `t('key','English')` precisa de valor em `pt/translation.json`; senão a UI fica em inglês mesmo com locale `pt`.
 - Labels de analytics vêm da API em inglês; a UI traduz via mapa em `render.analytics.tsx`.
 - Scripts de preenchimento: `ai-docs/tools/_apply_pt_bulk.py` e `_force_priority_pt.py`.

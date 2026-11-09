@@ -1,6 +1,12 @@
 # Decisões — postiz-whatsapp
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-08 — Deploy PT: typecheck após Turbopack
+- Contexto: sem `t` duplicado o compile passou; o typecheck ainda caiu em `ContinueModal` sem `useT` e regex `/is` (target `es2015`).
+- Decisão: `useT` em `ContinueModal`; detalhe WAHA com `[\s\S]` + flag `i` só.
+- Alternativas: subir `target` do tsconfig (risco amplo).
+- Consequência: build Easypanel precisa desse commit para a PT ir ao ar.
+
 ## 2026-11-08 — Deploy PT falhava por `t` duplicado
 - Contexto: três deploys Easypanel com a tradução caíram em ~4–6 min; live ficava no commit WhatsApp avatars.
 - Decisão: remover o segundo `const t = useT()` em `third-party.list.component.tsx` (`ApiModal`).

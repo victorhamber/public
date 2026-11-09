@@ -14,7 +14,6 @@ export const Null: FC<{
   existingId: string[];
 }> = () => null;
 export const ContinueProvider: FC = () => {
-  const t = useT();
   const { mutate } = useSWRConfig();
   const fetch = useFetch();
   const searchParams = useSearchParams();
@@ -124,6 +123,7 @@ const ContinueModal: FC<{
   refreshList: () => void;
 }> = (props) => {
   const modals = useModals();
+  const t = useT();
 
   useEffect(() => {
     modals.openModal({
@@ -138,7 +138,7 @@ const ContinueModal: FC<{
         />
       ),
     });
-  }, []);
+  }, [modals, props, t]);
 
   return null;
 };

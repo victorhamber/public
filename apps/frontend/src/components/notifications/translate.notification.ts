@@ -54,7 +54,7 @@ const RULES: Array<{ re: RegExp; to: (...m: string[]) => string }> = [
         : `Ocorreu um erro ao publicar comentários no ${provider}`,
   },
   {
-    re: /^An error occurred while posting on ([^\s:]+)(?::\s*(.+))?$/is,
+    re: /^An error occurred while posting on ([^\s:]+)(?::\s*([\s\S]+))?$/i,
     to: (_a, provider, detail) =>
       detail
         ? `Ocorreu um erro ao publicar no ${provider}: ${detail}`
