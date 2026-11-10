@@ -3,11 +3,14 @@ Fontes: packages/forge/blocks/postiz/**, publishing/apps/backend/**, deploy/smok
 Atualizado: 2026-11-10
 
 ## Papéis
-- Fluxos: Typebot builder/viewer
+- Fluxos: builder/viewer (marca visível Trajettu)
 - Publishing: Postiz em `publishing/` (API+UI+WAHA+Temporal)
 
+## Bloco
+`@typebot.io/postiz-block` (`id: postiz`). Auth cifrada: `baseUrl` + `apiKey`. Cliente HTTP: `ky`. Ações: `listChannels`, `publishPost`.
+
 ## Auth API
-`Authorization: <orgApiKey>` em `{baseUrl}/public/v1/...` com base default `http://publishing:5000/api`.
+`Authorization: <orgApiKey>` (header cru) em `{baseUrl}/public/v1/...`. Default de `baseUrl`: `http://publishing:5000/api` (sem barra final).
 
 ## Endpoints v1
 | Capacidade | Path | Bloco |
