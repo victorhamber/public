@@ -1,0 +1,199 @@
+# Easypanel Compose: padrão deskcomm (sem ports/rede custom) + HOSTNAME=0.0.0.0
+# (Next/Typebot escutava só no IP da bridge; Traefik usava outro IP → 502)
+services:
+  typebot-db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: typebot
+      POSTGRES_PASSWORD: typebot
+    volumes:
+      - typebot-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  typebot-redis:
+    image: redis:alpine
+    restart: always
+    command: --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - typebot-redis-data:/data
+
+  builder:
+    image: baptistearno/typebot-builder:latest
+    restart: always
+    depends_on:
+      typebot-db:
+        condition: service_healthy
+      typebot-redis:
+        condition: service_healthy
+    environment:
+      ENCRYPTION_SECRET: do+UspMmB/rewbX2K/rskFmtgGSSZ8Ta
+      DATABASE_URL: postgresql://postgres:typebot@typebot-db:5432/typebot
+      REDIS_URL: redis://typebot-redis:6379
+      NEXTAUTH_URL: https://master.trajettu.com
+      NEXT_PUBLIC_VIEWER_URL: https://bot.trajettu.com
+      ADMIN_EMAIL: contato@victorhamber.com
+      SMTP_HOST: smtp.resend.com
+      SMTP_PORT: "465"
+      SMTP_USERNAME: resend
+      SMTP_PASSWORD: COLOQUE_A_API_KEY_DO_RESEND
+      SMTP_SECURE: "true"
+      NEXT_PUBLIC_SMTP_FROM: "MASTER <contato@victorhamber.com>"
+      SSRF_ALLOWED_HOSTS: publishing,localhost
+      NEXT_PUBLIC_POSTIZ_URL: https://pub.trajettu.com
+      NEXT_PUBLIC_PUBLISHING_EMBED_URL: https://pub.trajettu.com/launches
+      NODE_OPTIONS: --no-node-snapshot
+      HOSTNAME: "0.0.0.0"
+
+  viewer:
+    image: baptistearno/typebot-viewer:latest
+    restart: always
+    depends_on:
+      typebot-db:
+        condition: service_healthy
+      typebot-redis:
+        condition: service_healthy
+    environment:
+      ENCRYPTION_SECRET: do+UspMmB/rewbX2K/rskFmtgGSSZ8Ta
+      DATABASE_URL: postgresql://postgres:typebot@typebot-db:5432/typebot
+      REDIS_URL: redis://typebot-redis:6379
+      NEXTAUTH_URL: https://master.trajettu.com
+      NEXT_PUBLIC_VIEWER_URL: https://bot.trajettu.com
+      ADMIN_EMAIL: contato@victorhamber.com
+      SMTP_HOST: smtp.resend.com
+      SMTP_PORT: "465"
+      SMTP_USERNAME: resend
+      SMTP_PASSWORD: COLOQUE_A_API_KEY_DO_RESEND
+      SMTP_SECURE: "true"
+      NEXT_PUBLIC_SMTP_FROM: "MASTER <contato@victorhamber.com>"
+      SSRF_ALLOWED_HOSTS: publishing,localhost
+      NEXT_PUBLIC_POSTIZ_URL: https://pub.trajettu.com
+      NEXT_PUBLIC_PUBLISHING_EMBED_URL: https://pub.trajettu.com/launches
+      NODE_OPTIONS: --no-node-snapshot
+      HOSTNAME: "0.0.0.0"
+
+  publishing-db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postiz-password
+      POSTGRES_USER: postiz-user
+      POSTGRES_DB: postiz-db
+    volumes:
+      - publishing-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postiz-user -d postiz-db"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  publishing-redis:
+    image: redis:7.2
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - publishing-redis-data:/data
+
+  publishing:
+    image: ghcr.io/gitroomhq/postiz-app:v2.25.3
+    restart: always
+    environment:
+      MAIN_URL: https://pub.trajettu.com
+      FRONTEND_URL: https://pub.trajettu.com
+      NEXT_PUBLIC_BACKEND_URL: https://pub.trajettu.com/api
+      JWT_SECRET: change-me-master-publishing-jwt-32chars
+      DATABASE_URL: postgresql://postiz-user:postiz-password@publishing-db:5432/postiz-db
+      REDIS_URL: redis://publishing-redis:6379
+      BACKEND_INTERNAL_URL: http://publishing:3000
+      TEMPORAL_ADDRESS: temporal:7233
+      IS_GENERAL: "true"
+      DISABLE_REGISTRATION: "false"
+      STORAGE_PROVIDER: local
+      UPLOAD_DIRECTORY: /uploads
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: /uploads
+      WAHA_API_BASE_URL: http://waha:3000
+      WAHA_API_KEY: ""
+      NX_ADD_PLUGINS: "false"
+      HOSTNAME: "0.0.0.0"
+    volumes:
+      - publishing-config:/config/
+      - publishing-uploads:/uploads/
+    depends_on:
+      publishing-db:
+        condition: service_healthy
+      publishing-redis:
+        condition: service_healthy
+
+  waha:
+    image: devlikeapro/waha:latest-2026.7.2
+    restart: always
+    environment:
+      WAHA_API_KEY: "sha512:"
+      WHATSAPP_DEFAULT_ENGINE: NOWEB
+      WAHA_DASHBOARD_ENABLED: "false"
+      WHATSAPP_RESTART_ALL_SESSIONS: "True"
+    volumes:
+      - waha-sessions:/app/.sessions
+      - waha-media:/app/.media
+
+  temporal-postgresql:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    volumes:
+      - temporal-pg-data:/var/lib/postgresql/data
+
+  temporal-elasticsearch:
+    image: elasticsearch:7.17.27
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+    volumes:
+      - temporal-es-data:/usr/share/elasticsearch/data
+
+  temporal:
+    image: temporalio/auto-setup:1.28.1
+    depends_on:
+      - temporal-postgresql
+      - temporal-elasticsearch
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+      - ENABLE_ES=true
+      - ES_SEEDS=temporal-elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_NAMESPACE=default
+
+volumes:
+  typebot-db-data:
+  typebot-redis-data:
+  publishing-db-data:
+  publishing-redis-data:
+  publishing-config:
+  publishing-uploads:
+  waha-sessions:
+  waha-media:
+  temporal-pg-data:
+  temporal-es-data:

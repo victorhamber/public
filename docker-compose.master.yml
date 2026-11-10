@@ -1,0 +1,213 @@
+# MASTER unificado: Typebot (fluxos) + Publishing/Postiz (canais/calendário/WA) numa rede.
+# Uso: docker compose -f docker-compose.master.yml --env-file .env.master up -d
+# Build custom do publishing: defina PUBLISHING_IMAGE ou build a partir de ./publishing
+
+x-typebot-common: &typebot-common
+  restart: always
+  depends_on:
+    typebot-redis:
+      condition: service_healthy
+    typebot-db:
+      condition: service_healthy
+  networks:
+    - master-network
+  env_file: .env.master
+  environment:
+    REDIS_URL: redis://typebot-redis:6379
+    SSRF_ALLOWED_HOSTS: publishing,localhost
+    NEXT_PUBLIC_POSTIZ_URL: ${NEXT_PUBLIC_POSTIZ_URL:-http://localhost:4007}
+    NEXT_PUBLIC_PUBLISHING_EMBED_URL: ${NEXT_PUBLIC_PUBLISHING_EMBED_URL:-http://localhost:4007/launches}
+
+services:
+  typebot-db:
+    image: postgres:16
+    restart: always
+    volumes:
+      - typebot-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: typebot
+      POSTGRES_PASSWORD: typebot
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - master-network
+
+  typebot-redis:
+    image: redis:alpine
+    restart: always
+    command: --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - typebot-redis-data:/data
+    networks:
+      - master-network
+
+  typebot-builder:
+    <<: *typebot-common
+    image: ${TYPEBOT_BUILDER_IMAGE:-baptistearno/typebot-builder:latest}
+    ports:
+      - "8080:3000"
+
+  typebot-viewer:
+    <<: *typebot-common
+    image: ${TYPEBOT_VIEWER_IMAGE:-baptistearno/typebot-viewer:latest}
+    ports:
+      - "8081:3000"
+
+  # --- Publishing (Postiz) — DB próprio, mesmo produto MASTER ---
+  publishing-db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${PUBLISHING_DB_PASSWORD:-postiz-password}
+      POSTGRES_USER: ${PUBLISHING_DB_USER:-postiz-user}
+      POSTGRES_DB: ${PUBLISHING_DB_NAME:-postiz-db}
+    volumes:
+      - publishing-db-data:/var/lib/postgresql/data
+    networks:
+      - master-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${PUBLISHING_DB_USER:-postiz-user} -d ${PUBLISHING_DB_NAME:-postiz-db}",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  publishing-redis:
+    image: redis:7.2
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - publishing-redis-data:/data
+    networks:
+      - master-network
+
+  publishing:
+    image: ${PUBLISHING_IMAGE:-ghcr.io/gitroomhq/postiz-app:v2.25.3}
+    restart: always
+    environment:
+      MAIN_URL: ${PUBLISHING_PUBLIC_URL:-http://localhost:4007}
+      FRONTEND_URL: ${PUBLISHING_PUBLIC_URL:-http://localhost:4007}
+      NEXT_PUBLIC_BACKEND_URL: ${PUBLISHING_PUBLIC_URL:-http://localhost:4007}/api
+      JWT_SECRET: ${PUBLISHING_JWT_SECRET:-change-me-master-publishing-jwt}
+      DATABASE_URL: postgresql://${PUBLISHING_DB_USER:-postiz-user}:${PUBLISHING_DB_PASSWORD:-postiz-password}@publishing-db:5432/${PUBLISHING_DB_NAME:-postiz-db}
+      REDIS_URL: redis://publishing-redis:6379
+      BACKEND_INTERNAL_URL: http://publishing:3000
+      TEMPORAL_ADDRESS: temporal:7233
+      IS_GENERAL: "true"
+      DISABLE_REGISTRATION: ${PUBLISHING_DISABLE_REGISTRATION:-false}
+      STORAGE_PROVIDER: local
+      UPLOAD_DIRECTORY: /uploads
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: /uploads
+      WAHA_API_BASE_URL: http://waha:3000
+      WAHA_API_KEY: ${WAHA_API_KEY:-}
+      NX_ADD_PLUGINS: "false"
+    volumes:
+      - publishing-config:/config/
+      - publishing-uploads:/uploads/
+    ports:
+      - "4007:5000"
+    networks:
+      - master-network
+      - temporal-network
+    depends_on:
+      publishing-db:
+        condition: service_healthy
+      publishing-redis:
+        condition: service_healthy
+
+  waha:
+    image: devlikeapro/waha:latest-2026.7.2
+    restart: always
+    environment:
+      WAHA_API_KEY: "sha512:${WAHA_API_KEY_SHA512:-}"
+      WHATSAPP_DEFAULT_ENGINE: NOWEB
+      WAHA_DASHBOARD_ENABLED: "false"
+      WHATSAPP_RESTART_ALL_SESSIONS: "True"
+    volumes:
+      - waha-sessions:/app/.sessions
+      - waha-media:/app/.media
+    networks:
+      - master-network
+
+  temporal-postgresql:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    networks:
+      - temporal-network
+    volumes:
+      - temporal-pg-data:/var/lib/postgresql/data
+
+  temporal-elasticsearch:
+    image: elasticsearch:7.17.27
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    networks:
+      - temporal-network
+    volumes:
+      - temporal-es-data:/usr/share/elasticsearch/data
+
+  temporal:
+    image: temporalio/auto-setup:1.28.1
+    depends_on:
+      - temporal-postgresql
+      - temporal-elasticsearch
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=temporal-elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_NAMESPACE=default
+    networks:
+      - temporal-network
+    volumes:
+      - ./publishing/dynamicconfig:/etc/temporal/config/dynamicconfig
+    ports:
+      - "7233:7233"
+
+networks:
+  master-network:
+    driver: bridge
+  temporal-network:
+    driver: bridge
+    name: master-temporal-network
+
+volumes:
+  typebot-db-data:
+  typebot-redis-data:
+  publishing-db-data:
+  publishing-redis-data:
+  publishing-config:
+  publishing-uploads:
+  waha-sessions:
+  waha-media:
+  temporal-pg-data:
+  temporal-es-data:

@@ -1,0 +1,25 @@
+import type { Variable } from "./schemas";
+
+export const parseGuessedValueType = (
+  value: Variable["value"],
+): string | (string | null)[] | boolean | number | null | undefined => {
+  if (value === null) return null;
+  if (value === undefined) return;
+  if (typeof value !== "string") return value;
+  const isStartingWithZero =
+    value.startsWith("0") && !value.startsWith("0.") && value.length > 1;
+  if (typeof value === "string" && isStartingWithZero) return value;
+  const isStartingWithPlus = value.startsWith("+");
+  if (typeof value === "string" && isStartingWithPlus) return value;
+  if (typeof value === "number") return Number.isNaN(value) ? null : value;
+  if (value === "true") return true;
+  if (value === "false") return false;
+  if (value === "null") return null;
+  if (value === "undefined") return;
+  const num = Number(value);
+  if (Number.isNaN(num)) return value;
+  // Integers outside the safe range (e.g. WhatsApp Business Account IDs)
+  // can't be represented exactly as a JS number, keep them as strings
+  if (Number.isInteger(num) && !Number.isSafeInteger(num)) return value;
+  return num;
+};

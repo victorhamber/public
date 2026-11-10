@@ -1,12 +1,5 @@
-# Estado atual — postiz-whatsapp
-Atualizado: 2026-11-09
-
-## Em andamento
-- Preview YouTube no ar (`e57d05ad`). Victor posta link só-texto num grupo e confere thumbnail.
-
-## Próximos passos
-1. Testar link YouTube nos grupos.
-2. Confirmar também vídeo + menção do deploy anterior.
-
-## Bloqueios / dúvidas
-- Nenhum.
+# Estado — MASTER
+Atualizado: 2026-11-10
+Feito: marca visível Trajettu (título, ícone, textos, badge); vídeos de demo do Typebot removidos do editor.
+Próximo: subir esta build no Easypanel (a imagem oficial ainda mostra Typebot); menu Publicar / Agendar / WhatsApp.
+Bloqueio: Easypanel sobe `baptistearno/typebot-builder`. OAuth canais Postiz perdido.

@@ -1,74 +1,57 @@
-# Decisões — postiz-whatsapp
+# Decisões — master-typebot
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
-## 2026-11-09 — Preview de link YouTube no WhatsApp
-- Contexto: link YouTube nos grupos saía cru; no celular o WhatsApp monta thumbnail.
-- Decisão: `linkPreview` + `linkPreviewHighQuality` no `sendText`; YouTube via oEmbed → `send/link-custom-preview`.
-- Alternativas: só flag auto (YouTube bloqueia bot); scrape OG próprio (mais frágil).
-- Consequência: texto-only com URL ganha card; mídia+caption ainda depende do WAHA/WhatsApp.
+## 2026-11-10 — Marca visível é Trajettu
+- Contexto: fork é produto novo; marca e vídeos de demonstração do Typebot não podem aparecer.
+- Decisão: título/favicon/badge = Trajettu; catálogo de vídeos do editor vazio; bot de suporte Typebot desligado.
+- Alternativas: manter a marca no código e só esconder no CSS.
+- Consequência: some no site quando o Easypanel subir esta build, não a imagem oficial.
 
-## 2026-11-09 — Vídeo WAHA via sendVideo + mentions all
-- Contexto: publicação com vídeo nos grupos falhou; log WAHA `sendImage` + Sharp `unsupported image format`. Menção individual sem `@` no texto não pingava.
-- Decisão: detectar vídeo pela extensão (porque `updateMedia` fixa `type:'image'`); `sendVideo` + `convert:true`; `mentions:["all"]` quando invisibleMention.
-- Alternativas: corrigir `updateMedia` global (risco em outros canais); lista de JIDs (já quebrou com objeto/`endsWith`).
-- Consequência: redeploy do Postiz; reenviar o vídeo nos grupos WhatsApp.
+## 2026-11-10 — Um produto, visual Typebot (Postiz/WAHA por trás)
+- Contexto: usuário rejeitou apps/domínios separados; Typebot era só o visual de referência.
+- Decisão: uma interface (menu Fluxos, Publicar agora, Agendar, WhatsApp). Postiz e WAHA são motor interno, sem produto próprio.
+- Alternativas: iframe `/publishing` + host `pub.trajettu.com`; Typebot oficial + Postiz lado a lado.
+- Consequência: a imagem `baptistearno/typebot-builder` no ar não tem esse menu; a UI MASTER precisa ser a que sobe.
 
-## 2026-11-08 — Deploy PT: typecheck após Turbopack
-- Contexto: sem `t` duplicado o compile passou; o typecheck ainda caiu em `ContinueModal` sem `useT` e regex `/is` (target `es2015`).
-- Decisão: `useT` em `ContinueModal`; detalhe WAHA com `[\s\S]` + flag `i` só.
-- Alternativas: subir `target` do tsconfig (risco amplo).
-- Consequência: build Easypanel precisa desse commit para a PT ir ao ar.
+## 2026-11-10 — Auth Typebot via Resend SMTP (não HTTP API)
+- Contexto: `/signin` sem providers; Typebot só liga e-mail se `NEXT_PUBLIC_SMTP_FROM` + SMTP_* existirem.
+- Decisão: Resend como SMTP (`smtp.resend.com:465`, user `resend`, password=API key); FROM/ADMIN=`contato@victorhamber.com`.
+- Alternativas: OAuth Google/GitHub; Resend HTTP API (Typebot não usa).
+- Consequência: magic-link no builder após Save/Deploy do compose Easypanel.
 
-## 2026-11-08 — Deploy PT falhava por `t` duplicado
-- Contexto: três deploys Easypanel com a tradução caíram em ~4–6 min; live ficava no commit WhatsApp avatars.
-- Decisão: remover o segundo `const t = useT()` em `third-party.list.component.tsx` (`ApiModal`).
-- Alternativas: renomear a segunda variável (desnecessário).
-- Consequência: `next build` deixa de abortar com `the name t is defined multiple times`.
+## 2026-11-10 — Traefik Compose: HOSTNAME + sem ports (sem edge)
+- Contexto: Traefik 502; builder escutava só no IP da bridge (`172.21.x`), não no IP que o Traefik usava; `ports` piorava multi-rede. Deskcomm OK sem ports.
+- Decisão: `HOSTNAME=0.0.0.0` em builder/viewer/publishing; compose sem `ports`; domínio no Compose `builder:3000`; destruir App `edge`.
+- Alternativas: nginx edge; rede `easypanel-master` + aliases (não bastou sozinho).
+- Consequência: `master.trajettu.com` via Traefik direto; padrão igual deskcomm.
 
-## 2026-11-08 — Lacuna de chaves PT + JID string no WhatsApp
-- Contexto: UI em `pt` ainda mostrava inglês porque `t(key, 'English')` não tinha entrada no JSON; sininho falhava em "published … at" sem URL; WAHA 500 `jid.endsWith is not a function`.
-- Decisão: preencher `pt/en` com as chaves da UI; mapa de notificação aceita URL vazia e provider antes do `:`; `groupParticipants` normaliza id para string com `@`.
-- Alternativas: deixar fallback EN (rejeitado); desligar menções invisíveis (piora alcance).
-- Consequência: redeploy do frontend/backend necessário para o usuário ver a mudança.
+## 2026-11-10 — Edge App bypass Compose Traefik (supersedida)
+- Histórico: edge nginx→`:8080` enquanto o 502 do bind/ports não estava diagnosticado; removido após HOSTNAME+sem ports.
 
-## 2026-11-08 — Build do GitHub só sob demanda
-- Contexto: cada push em `main` rodava `build.yml` e mandava e-mail de falha; o deploy real é no Easypanel.
-- Decisão: `on: workflow_dispatch` (+ PR/merge_group). Corrigir `useT` fora de escopo que quebrou o build da tradução.
-- Alternativas descartadas: manter build em todo push; apagar o workflow.
-- Consequência: sem spam de Actions no e-mail; CI ainda dá para rodar na mão.
 
-## 2026-11-08 — Português padrão neste fork
-- Contexto: UI em PT ainda mostrava inglês em streak, toasts e sininho (texto gravado no servidor).
-- Decisão: `fallbackLng=pt`; notificações/e-mails novos em PT no orchestrator; mapa EN→PT na exibição do sininho.
-- Alternativas descartadas: i18n multi-idioma no Temporal; migração SQL das notificações antigas.
-- Consequência: novas mensagens já nascem em PT; antigas traduzem na UI pelos padrões conhecidos.
+## 2026-11-10 — Compose Easypanel: 1 rede + nomes curtos
+- Contexto: Traefik 502 com `typebot-builder` e rede `master_temporal` isolada.
+- Decisão: renomear para `builder`/`viewer`; tudo na rede default; ports host 8080/8081/4007 de emergência.
+- Alternativas: manter rede Temporal isolada; só Cloudflare Flexible→:8080.
+- Consequência: aviso `ports` no Easypanel; App `edge` passou a ser o proxy público.
 
-## 2026-11-08 — WhatsApp no discriminator de post + foto via data-url
-- Contexto: salvar publicação com canal WhatsApp devolvia toast genérico; avatars vinham `/no-picture.jpg`.
-- Decisão: registrar `WhatsappDto` em `all.providers.settings`. Baixar foto do WAHA como data-url no `authenticate` e oferecer `sync-pictures`.
-- Alternativas descartadas: passar URL do WAHA para `uploadSimple` (SSRF/API key); deixar `__type` fora da lista.
-- Consequência: `mapTypeToPost` aceita `whatsapp`. Grupos novos e backfill ganham avatar quando o WAHA tiver `url`.
+## 2026-11-10 — Easypanel projeto `master` (Compose stack)
+- Contexto: subir produto unificado sem wipe do DB antigo Postiz.
+- Decisão: novo projeto Compose `master/stack`; parar `postiz`+`temporal` (liberar 4007/7233); manter `postiz-db`/`redis` até cutover.
+- Alternativas: editar o projeto `postiz` in-place; apagar volumes já.
+- Consequência: `ENCRYPTION_SECRET` Typebot deve ter **exatamente 32** chars no compose Easypanel.
 
-## 2026-11-08 — Repositório e motor do WAHA
-- Contexto: o GitHub vazio é `https://github.com/victorhamber/public.git`. O Deskcomm mostra como o WAHA sobe.
-- Decisão: fork da tag `v2.25.3` nesse repositório. WAHA `devlikeapro/waha:latest-2026.7.2`, motor NOWEB, dashboard desligado, sessões retomadas no volume.
-- Alternativas descartadas: imagem `:latest` sem tag; motor WEBJS; reutilizar a sessão do Desk.
-- Consequência: chave em texto no Postiz e hash `sha512:` no container. Sem webhook para o Desk.
+## 2026-11-10 — MASTER unificado (Typebot base + Postiz interno)
+- Contexto: um produto só, não dois apps bridged.
+- Decisão: base Typebot; Postiz vendido em `publishing/` (pnpm); compose/Easypanel único; Forge → API interna.
+- Alternativas: Postiz como base; ponte eterna a `post.trajettu.com`.
+- Consequência: nav `/publishing` (iframe); cutover DNS depois do smoke.
 
-## 2026-11-08 — WAHA dentro do fork, sessão nova
-- Contexto: publicar em grupos de WhatsApp a partir do Postiz, com QR code e escolha de grupos.
-- Decisão: clonar Postiz `v2.25.3` e embutir um WAHA só desse compose. Provedor nativo `whatsapp`.
-- Alternativas descartadas: usar o WAHA do Desk ou o Evolution API do Zap; variável na imagem oficial.
-- Consequência: número exclusivo de divulgação. A imagem `ghcr.io/gitroomhq/postiz-app:v2.25.3` permanece sem essa função.
+## 2026-11-10 — Typebot shell + Postiz motor (supersedida)
+- Mantida só como histórico: ponte externa foi etapa intermediária; substituída pela unificação acima.
 
-## 2026-11-08 — Menção invisível com teto
-- Contexto: avisar os participantes sem mostrar `@nome` no texto.
-- Decisão: texto visível sem arroba; JIDs no campo de menções do envio. Teto configurável. Acima do teto, publica sem marcar o grupo inteiro.
-- Alternativas descartadas: escrever `@nome` no corpo; marcar sem limite.
-- Consequência: a pessoa pode receber aviso de menção. O texto publicado não mostra a marca.
-
-## 2026-11-08 — Documentação antes do clone
-- Contexto: o GitHub ainda não existe. A implementação fica para outra sessão.
-- Decisão: este repositório guarda só o plano. O clone espera a URL que o usuário passar.
-- Alternativas descartadas: clonar agora dentro da pasta do EA TREND.
-- Consequência: nenhuma edição no Postiz até o clone. Caminhos são destino, não arquivo confirmado.
+## 2026-11-10 — Documentação modular para IA
+- Contexto: reduzir tokens gastos relendo o código.
+- Decisão: ai-docs/ (MAP, STATE, modules/) ao lado do AGENTS.md do Typebot.
+- Alternativas descartadas: sobrescrever AGENTS.md upstream.
+- Consequência: toda mudança MASTER atualiza módulo + STATE.

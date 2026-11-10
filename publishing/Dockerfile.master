@@ -1,0 +1,6 @@
+# Build publishing image for MASTER (from vendored Postiz tree).
+# docker build -f publishing/Dockerfile.master -t master-publishing:local ./publishing
+FROM ghcr.io/gitroomhq/postiz-app:v2.25.3
+# Until a full multi-stage build from this tree is wired in CI, production
+# MASTER can override PUBLISHING_IMAGE after building via Dockerfile.dev --target dist.
+LABEL org.gitroom.master="publishing-subsystem"

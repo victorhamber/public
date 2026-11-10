@@ -1,41 +1,60 @@
-# postiz-whatsapp — guia para IA
-<!-- Máx. 60 linhas. Só o que a IA precisa SEMPRE. Detalhe mora em ai-docs/. -->
+# Repository Guidelines
 
-## O que é
-Fork do Postiz v2.25.3 com WhatsApp nativo, via WAHA. Publica em grupos escolhidos depois de um QR code.
+> MASTER unificado: Typebot=fluxos; Postiz=publishing interno (`publishing/`). Ler `ai-docs/STATE.md` + `modules/publishing.md`. Deploy: `docker-compose.master.yml` / `deploy/easypanel.md`.
 
-## Ciclo de toda mudança — automático, sem o usuário pedir
-**Ler** (antes de editar; pare quando souber o suficiente)
-1. `ai-docs/STATE.md` — onde paramos · 2. `ai-docs/MAP.md` — índice de arquivos/símbolos (use em vez de explorar o código) · 3. `ai-docs/modules/<x>.md` da área
-4. `ARCHITECTURE.md`, `CONVENTIONS.md`, `DECISIONS.md` só sob demanda. Siga o que já está decidido; não redecida.
-5. Sem `ai-docs/MAP.md`: rode o `init.py` da skill token-economy, documente a área que vai tocar e então siga com o pedido.
+## Project Structure & Module Organization
 
-**Mudar** — arquivo novo só na pasta de `CONVENTIONS.md`; não mova arquivo existente sem pedido de reestrutura.
+This is a Nx monorepo with Bun package manager.
 
-**Gravar** (sem exceção, correção pequena inclusive)
-1. Atualize `modules/<x>.md` do que mudou (`Fontes:` diz quais arquivos ele cobre; arquivo sem módulo → crie/estenda um)
-2. Reescreva `STATE.md` (≤5 linhas: feito / próximo / bloqueio)
-3. Decisão não óbvia → 1 entrada em `DECISIONS.md`
-4. `python ai-docs/tools/map_repo.py --check` → resolva o que apontar. Não encerre com documentação velha.
+- `apps/builder/` - Visual flow editor (Running on port 3000)
+- `apps/viewer/` - Runtime that executes bots (Running on port 3001)
+- `apps/landing-page/` - Commercial website landing page
+- `apps/workflows/` - Durable workflows server
+- `apps/docs/` - Documentation
+- `packages/` - All feature-driven modules, shared libs, schemas, UI package.
 
-## Não alucinar
-- Código e MAP são a verdade. Se o doc divergir, corrija o doc.
-- Não afirme função, arquivo, input ou comportamento sem ter conferido no MAP ou no trecho do código.
-- Não sabe? Procure (grep/símbolo) ou pergunte. Não preencha lacuna com suposição, nem no código nem no doc.
-- Confirme o arquivo no MAP antes de alterar o canal WhatsApp.
+## Commands
 
-## Economia de tokens
-- Busque antes de abrir. Abra só a faixa de linhas; nunca arquivo inteiro >200 linhas.
-- Não releia o que já está no contexto; não leia pastas inteiras; ignore `node_modules`, `vendor`, `dist`, logs, binários.
-- Responda com diff/patch e `caminho:linha`; sem repetir o pedido nem resumir o óbvio.
-- Tarefa grande → plano curto primeiro; passos pequenos e verificáveis.
+All scripts must be ran with `bunx nx`:
 
-## Regras de código
-- Arquivos pequenos e coesos (<300 linhas); 1 módulo = 1 responsabilidade; nomes descritivos.
-- Cabeçalho de 1–2 linhas em arquivo novo; docstring só na API pública e no "porquê".
-- Constantes/config separadas da lógica; sem duplicação; sem dependência nova sem necessidade.
-- Licença do Postiz é AGPL-3.0. O fork publicado permanece AGPL.
+- Typescript project references can be automatically updated with `bunx nx sync`.
+- Most of the scripts are inferred with nx plugins. A few examples:
+  - fastest way to typecheck `builder` and/or `viewer`: run root `bunx nx typecheck` (runs `tsc --build --emitDeclarationOnly`)
+  - typecheck a particular package: `bunx nx typecheck package_name`.
+  - test a package: `bunx nx test package_name`
+  - filter builder Bun tests: `bunx nx test builder --args=src/features/typebot/api/handleGetTypebot.test.ts` (Bun ignores `--testPathPattern`).
+  - typecheck all afffected packages: `bunx nx affected -t typecheck` (**IMPORTANT**: Rely first on IDE's TS server diagnostics first for faster feedback loop)
+- To check format and lint, run: `bunx nx format-and-lint` (with `--write --unsafe` to run autofix)
+- Run format/lint from the repository root with `bunx nx format-and-lint` (add `--write` to fix). Avoid `nx exec` for workspace-relative paths: it also executes in dependency directories even when `--projects` selects only the root project.
+- Never run plain `bunx tsc`, use `bunx nx`
+- Avoid running multiple Vitest test targets in a single Nx command such as `bunx nx run-many -t test` or `bunx nx affected -t test`. Each Nx test target starts its own Vitest process and its own global setup.
+- When multiple Vitest projects need to share the same global setup and database container, run the root workspace test target instead: `bunx nx test`.
+- To run one Vitest project through the shared root runner, use `bunx nx test <project-name>`.
 
-## Comandos
-- Ainda sem clone. Não invente script de build.
-- Depois do clone: conferir `package.json` e o compose da tag `v2.25.3` antes de citar comando.
+## Coding style
+
+- Write Effect code whenever possible. We use Effect V4 Beta. **IMPORTANT** Always inspect the Effect source through `opensrc` first (see "Source Code Reference" below) — start from `LLMS.md` at the source tree root and follow the linked docs. Never guess at Effect patterns.
+- Avoid `as` type assertions: narrow or parse the value to get the right type. `as const` is fine.
+- Rely heavily on type inference, we tend not to declare types.
+- Prefer files exporting a single primary function and the file name should match the exported function name. On that file, the main exported function is at the top while local helpers are at the bottom.
+- Use very explicit variable names.
+
+## Source Code Reference
+
+To check the source code and documentation of a dependency, run `bunx opensrc path <package-name>` (e.g. `bunx opensrc path lexical`) to get the local path to its cached source, then read or grep files under that path (e.g. `cat $(bunx opensrc path lexical)/README.md`). For beta / pre-release versions, always pin the exact version with `<package>@<version>` (e.g. `bunx opensrc path effect@<exact-beta-version>`).
+
+`opensrc path` returns the package directory. Repo-level docs like `LLMS.md` live at the source tree root, so go up from the package path to find them (e.g. `cat $(bunx opensrc path effect@...)/../LLMS.md`).
+
+**IMPORTANT** Do not use `node_modules/` as your primary source for understanding dependency internals. Always prefer `opensrc` for the original source implementation. Use `node_modules/` only when you specifically need the installed runtime/distribution output.
+
+## Workflow
+
+- Changes land on `main` through pull requests, never by a direct push.
+- Use `trash` instead of `rm` when deleting files or directories.
+- To navigate to an authenticated session with Playwright, you need to inject cookies from `apps/viewer/src/test/.auth/user.json`.
+- Do not pass those stored cookie objects directly to `browserContext.addCookies()`. Remap them to a minimal Playwright shape such as `{ name, value, url: "http://localhost:3000", expires, httpOnly, secure, sameSite }`.
+- Prefer `http://localhost:3000` over `127.0.0.1:3000` when reusing that auth file, since the saved session cookies are scoped for `localhost`.
+
+## Authorization regression tests
+
+- With `SKIP_ENV_CHECK=true`, environment transformations are skipped. In isolated Bun tests, supply parsed values such as `ADMIN_EMAIL: ["admin@example.com"]` in the env module mock; setting only `process.env.ADMIN_EMAIL` leaves a string and does not exercise the administrator policy correctly.

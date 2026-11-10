@@ -1,34 +1,30 @@
 # MAP/_raiz
 
 ## (raiz)/
-- .coderabbit.yaml [178L]
-- .dockerignore [23L] We want the docker builds to be clean, and as fast as possible. Don't send
-- .env.example [222L] Configuration reference: http://docs.postiz.com/configuration/reference
-- .eslintignore [2L]
-- .gitmodules [4L]
-- .npmrc [6L]
-- .prettierignore [4L] Add files here to ignore them from prettier formatting
-- .prettierrc [4L]
-- AGENTS.md [42L] postiz-whatsapp — guia para IA
-- CCLA.md [128L] Fiduciary License Agreement 2.1
-- CODE_OF_CONDUCT.md [129L] Contributor Covenant Code of Conduct
-- CONTRIBUTING.md [73L] Contributing
-- Dockerfile.dev [29L]
-- ICLA.md [122L] Fiduciary License Agreement 2.1
-- LICENSE [662L]
-- README.md [199L] Intro
-- SECURITY.md [107L] Security Policy
-- chatgpt-app-submission.json [369L]
-- docker-compose.dev.yaml [148L] This docker-compose file is used for development purposes. It sets up the necess
-- docker-compose.yaml [305L] WAHA desta instalação. Sessão nova; não apontar para Desk nem Zap.
-- eslint.config.mjs [29L]
-- i18n.json [35L]
-- jest.config.ts [6L]
-- jest.preset.js [4L]
-- package.json [349L]
-- pnpm-workspace.yaml [4L]
-- railway.toml [3L]
-- sonar-project.properties [8L] Scan Performace
-- tsconfig.base.json [41L]
-- tsconfig.json [4L]
-- version.txt [2L]
+- .dockerignore [25L] node_modules
+- .editorconfig [11L]
+- .env.dev.example [27L] Keep viewer and builder cookies on different hostnames, including locally.
+- .env.example [25L] Make sure to change this to your own random string of 32 characters (https://doc
+- .env.master.example [33L] MASTER unificado — copie para .env.master
+- .gitmoji-changelogrc [95L]
+- .node-version [2L]
+- .tolgeerc [12L]
+- AGENTS.md [61L] Repository Guidelines
+- CONTRIBUTING.md [4L] Contributing to Typebot
+- Dockerfile [106L] syntax=docker/dockerfile:1
+- LICENSE [106L] Functional Source License, Version 1.1, Apache 2.0 Future License
+- README.md [109L]
+- SECURITY.md [37L] Security Policy
+- biome.json [65L]
+- bunfig.toml [4L]
+- conductor.json [8L]
+- docker-compose.build.yml [41L]
+- docker-compose.dev.yml [62L] This service just make sure a bucket with the right policies is created
+- docker-compose.master.yml [214L] MASTER unificado: Typebot (fluxos) + Publishing/Postiz (canais/calendário/WA) nu
+- docker-compose.yml [67L]
+- nx.json [35L]
+- package.json [159L]
+- t3.json [12L]
+- tsconfig.base.json [23L]
+- tsconfig.json [236L]
+- vitest.config.ts [11L]

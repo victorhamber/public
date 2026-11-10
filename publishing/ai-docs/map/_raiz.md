@@ -1,0 +1,34 @@
+# MAP/_raiz
+
+## (raiz)/
+- .coderabbit.yaml [178L]
+- .dockerignore [23L] We want the docker builds to be clean, and as fast as possible. Don't send
+- .env.example [222L] Configuration reference: http://docs.postiz.com/configuration/reference
+- .eslintignore [2L]
+- .gitmodules [4L]
+- .npmrc [6L]
+- .prettierignore [4L] Add files here to ignore them from prettier formatting
+- .prettierrc [4L]
+- AGENTS.md [42L] postiz-whatsapp — guia para IA
+- CCLA.md [128L] Fiduciary License Agreement 2.1
+- CODE_OF_CONDUCT.md [129L] Contributor Covenant Code of Conduct
+- CONTRIBUTING.md [73L] Contributing
+- Dockerfile.dev [29L]
+- ICLA.md [122L] Fiduciary License Agreement 2.1
+- LICENSE [662L]
+- README.md [199L] Intro
+- SECURITY.md [107L] Security Policy
+- chatgpt-app-submission.json [369L]
+- docker-compose.dev.yaml [148L] This docker-compose file is used for development purposes. It sets up the necess
+- docker-compose.yaml [305L] WAHA desta instalação. Sessão nova; não apontar para Desk nem Zap.
+- eslint.config.mjs [29L]
+- i18n.json [35L]
+- jest.config.ts [6L]
+- jest.preset.js [4L]
+- package.json [349L]
+- pnpm-workspace.yaml [4L]
+- railway.toml [3L]
+- sonar-project.properties [8L] Scan Performace
+- tsconfig.base.json [41L]
+- tsconfig.json [4L]
+- version.txt [2L]
