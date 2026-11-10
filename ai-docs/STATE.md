@@ -2,11 +2,11 @@
 Atualizado: 2026-11-09
 
 ## Em andamento
-- Preview YouTube no WhatsApp: oEmbed + `link-custom-preview` / `linkPreview` no sendText.
+- Preview YouTube no ar (`e57d05ad`). Victor posta link só-texto num grupo e confere thumbnail.
 
 ## Próximos passos
-1. Push + Implantar Easypanel.
-2. Victor posta de novo um link YouTube só-texto num grupo e confere thumbnail.
+1. Testar link YouTube nos grupos.
+2. Confirmar também vídeo + menção do deploy anterior.
 
 ## Bloqueios / dúvidas
 - Nenhum.
