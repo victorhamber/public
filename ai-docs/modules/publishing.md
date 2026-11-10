@@ -13,7 +13,7 @@ O root Bun/Nx só inclui `apps/*`. Postiz usa pnpm/Nest; fica **fora** do worksp
 
 ## Compose
 Serviço `publishing` (+ `publishing-db`, `publishing-redis`, `waha`, `temporal*`) em `docker-compose.master.yml`, rede `master-network`.
-Easypanel: compose `master`/`stack` (rede default; `HOSTNAME=0.0.0.0`; sem ports). Auth Typebot no mesmo stack via Resend SMTP (`deploy/easypanel.md`). `pub.trajettu.com` pendente. Projeto `postiz` destruído sem dump → OAuth perdido.
+Easypanel: compose `master`/`stack` (sem ports; `HOSTNAME=0.0.0.0`). `publishing` na rede externa `easypanel`, porta pública 5000. `https://pub.trajettu.com` responde 307 para `/auth`. Auth Typebot no mesmo stack via Resend SMTP (`deploy/easypanel.md`). Projeto `postiz` destruído sem dump → OAuth perdido.
 
 ## Build
 Ver `publishing/README.md`. Default image: `ghcr.io/gitroomhq/postiz-app:v2.25.3`; patches Trajettu exigem build do tree local.

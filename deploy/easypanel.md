@@ -27,8 +27,9 @@ Referência local: [`docker-compose.master.yml`](../docker-compose.master.yml) +
 
 ## VPS (Easypanel ForexRendimento)
 - Projeto: `master` → Compose `stack` (`deploy/docker-compose.easypanel.yml`)
-- Compose: rede default; **sem** `ports` host; `HOSTNAME=0.0.0.0` nos serviços HTTP (senão Traefik 502)
-- Domínios: `master.trajettu.com` → Compose `builder:3000`; depois `bot`/`pub` no mesmo padrão
+- Compose: **sem** `ports` host; `HOSTNAME=0.0.0.0` nos serviços HTTP
+- Serviço com domínio público entra na rede externa `easypanel` (senão Traefik 502). `viewer` e `publishing` declaram essa rede; `builder` o painel já liga sozinho
+- Domínios: `master.trajettu.com` → `builder:3000`; `bot.trajettu.com` → `viewer:3000`; `pub.trajettu.com` → `publishing:5000`
 - Projeto Easypanel `postiz` antigo foi destruído (sem dump); App `edge` foi aposentado
 
 ## Publishing image
@@ -37,5 +38,5 @@ Referência local: [`docker-compose.master.yml`](../docker-compose.master.yml) +
 
 ## Domínios (v1)
 - Fluxos: `master.trajettu.com` (builder) + viewer
-- Publicações: página `/publishing` no builder (iframe) **ou** host `pub.trajettu.com` no mesmo projeto
+- Publicações: `pub.trajettu.com` → `publishing:5000` (UI; o Nest interno fica na 3000)
 - Cutover de `post.trajettu.com`: ver [`cutover-post-trajettu.md`](./cutover-post-trajettu.md)

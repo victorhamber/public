@@ -1,6 +1,12 @@
 # Decisões — master-typebot
 <!-- Uma entrada de ≤5 linhas por decisão não óbvia. Mais recente no topo. Evita rediscutir/reanalisar. -->
 
+## 2026-11-10 — Viewer na rede easypanel
+- Contexto: `bot.trajettu.com` no domínio do Compose ainda dava 502. O `viewer` só estava em `master_stack_default`; o Traefik fala pela rede `easypanel`. Reiniciar o stack não ligou o container.
+- Decisão: `viewer` declara `networks: [default, easypanel]` com `easypanel` external. `builder` o painel já anexa.
+- Alternativas: só o domínio no painel; restart do stack.
+- Consequência: `https://bot.trajettu.com` responde o viewer (200).
+
 ## 2026-11-10 — Marca visível é Trajettu
 - Contexto: fork é produto novo; marca e vídeos de demonstração do Typebot não podem aparecer.
 - Decisão: título/favicon/badge = Trajettu; catálogo de vídeos do editor vazio; bot de suporte Typebot desligado.

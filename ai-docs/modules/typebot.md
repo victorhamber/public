@@ -11,7 +11,7 @@ Monorepo Nx/Bun; MASTER unificado (publishing interno). Ler STATE + `modules/pub
 ## Compose
 - Legado Typebot-only: `docker-compose.yml`
 - **Produto unificado:** `docker-compose.master.yml` (Typebot + publishing + Temporal + WAHA)
-- Easypanel: Compose `master`/`stack` (`builder`/`viewer`); `HOSTNAME=0.0.0.0`; sem `ports`; domínio Traefik → `builder:3000` (como deskcomm)
+- Easypanel: Compose `master`/`stack`; `HOSTNAME=0.0.0.0`; sem `ports`; `viewer` e `publishing` na rede externa `easypanel`. Domínios no ar: `master.trajettu.com` → `builder:3000`, `bot.trajettu.com` → `viewer:3000`, `pub.trajettu.com` → `publishing:5000`
 - `ENCRYPTION_SECRET` no compose Easypanel: **exatamente 32 chars**
 - Auth e-mail: Resend via SMTP (`SMTP_HOST=smtp.resend.com`, user `resend`, `SMTP_PORT=465`, `SMTP_SECURE=true`); `NEXT_PUBLIC_SMTP_FROM` + `ADMIN_EMAIL=contato@victorhamber.com`
 - No Git, `deploy/docker-compose.easypanel.yml` guarda `SMTP_PASSWORD: COLOQUE_A_API_KEY_DO_RESEND`. A API key real fica só no Easypanel.

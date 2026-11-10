@@ -1,4 +1,4 @@
-# MAP — master-typebot · 2026-11-10 · 4718 arquivos · 709261 linhas
+# MAP — master-typebot · 2026-11-10 · 4718 arquivos · 709273 linhas
 > Gerado por ai-docs/tools/map_repo.py — NÃO editar. Use isto em vez de ler o código inteiro: ache o arquivo/símbolo aqui e abra só o trecho.
 Stack: node, wordpress-plugin
 Entradas: npm scripts: postinstall, prepare, pre-commit, dev, format-and-lint, format-and-lint:fix, lint-repo, lint-repo:fix; apps/workflows/src/index.ts; packages/config/src/index.ts; packages/embeds/js/src/features/blocks/integrations/chatwoot/utils/index.ts; packages/embeds/js/src/features/commands/index.ts; packages/embeds/js/src/index.ts; packages/embeds/react/src/index.ts; packages/embeds/wordpress/trunk/typebot.php

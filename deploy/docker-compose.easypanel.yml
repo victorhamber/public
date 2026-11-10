@@ -1,5 +1,5 @@
-# Easypanel Compose: padrão deskcomm (sem ports/rede custom) + HOSTNAME=0.0.0.0
-# (Next/Typebot escutava só no IP da bridge; Traefik usava outro IP → 502)
+# Easypanel Compose: sem ports host, HOSTNAME=0.0.0.0, viewer e publishing na rede externa easypanel
+# (Traefik só alcança container nessa rede; sem ela o domínio responde 502)
 services:
   typebot-db:
     image: postgres:16
@@ -80,6 +80,9 @@ services:
       NEXT_PUBLIC_PUBLISHING_EMBED_URL: https://pub.trajettu.com/launches
       NODE_OPTIONS: --no-node-snapshot
       HOSTNAME: "0.0.0.0"
+    networks:
+      - default
+      - easypanel
 
   publishing-db:
     image: postgres:17-alpine
@@ -131,6 +134,9 @@ services:
     volumes:
       - publishing-config:/config/
       - publishing-uploads:/uploads/
+    networks:
+      - default
+      - easypanel
     depends_on:
       publishing-db:
         condition: service_healthy
@@ -197,3 +203,8 @@ volumes:
   waha-media:
   temporal-pg-data:
   temporal-es-data:
+
+networks:
+  easypanel:
+    external: true
+    name: easypanel
