@@ -1,9 +1,8 @@
 name: Deploy Workflows (Fly.io)
 
+# Trajettu sobe no Easypanel. Sem segredo Fly.io neste repo.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: read

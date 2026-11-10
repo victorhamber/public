@@ -1,14 +1,8 @@
 name: Deploy Partykit server
 
+# Trajettu sobe no Easypanel. Sem segredos PartyKit/Cloudflare neste repo.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "packages/partykit/**"
-      - "packages/lib/src/signWebhookToken.ts"
-      - "packages/lib/src/verifyWebhookToken.ts"
-      - ".github/workflows/deploy-partykit.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read

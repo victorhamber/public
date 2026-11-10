@@ -1,5 +1,5 @@
 # typebot (shell MASTER)
-Fontes: AGENTS.md, docker-compose.yml, docker-compose.master.yml, docker-compose.*.yml, deploy/*, apps/builder/**, apps/viewer/**, packages/embeds/js/src/components/LiteBadge.tsx, packages/embeds/js/src/components/icons/TypebotLogo.tsx, packages/forge/blocks/nocodb/src/index.ts
+Fontes: AGENTS.md, docker-compose.yml, docker-compose.master.yml, docker-compose.*.yml, deploy/*, apps/builder/**, apps/viewer/**, packages/embeds/js/src/components/LiteBadge.tsx, packages/embeds/js/src/components/icons/TypebotLogo.tsx, packages/forge/blocks/nocodb/src/index.ts, .github/workflows/deploy-partykit.yml, .github/workflows/deploy-workflows.yml, .github/workflows/auto-create-tags.yml
 Atualizado: 2026-11-10
 
 ## Papel
@@ -13,5 +13,8 @@ Monorepo Nx/Bun; MASTER unificado (publishing interno). Ler STATE + `modules/pub
 - **Produto unificado:** `docker-compose.master.yml` (Typebot + publishing + Temporal + WAHA)
 - Easypanel: Compose `master`/`stack` (`builder`/`viewer`); `HOSTNAME=0.0.0.0`; sem `ports`; domínio Traefik → `builder:3000` (como deskcomm)
 - `ENCRYPTION_SECRET` no compose Easypanel: **exatamente 32 chars**
-- Auth e-mail: Resend via SMTP (`SMTP_HOST=smtp.resend.com`, user `resend`, password = API key `re_…`, `SMTP_PORT=465`, `SMTP_SECURE=true`); `NEXT_PUBLIC_SMTP_FROM` + `ADMIN_EMAIL`
+- Auth e-mail: Resend via SMTP (`SMTP_HOST=smtp.resend.com`, user `resend`, `SMTP_PORT=465`, `SMTP_SECURE=true`); `NEXT_PUBLIC_SMTP_FROM` + `ADMIN_EMAIL=contato@victorhamber.com`
+- No Git, `deploy/docker-compose.easypanel.yml` guarda `SMTP_PASSWORD: COLOQUE_A_API_KEY_DO_RESEND`. A API key real fica só no Easypanel.
+- Código no GitHub: `victorhamber/public` branch `main`
+- CI de nuvem do Typebot (PartyKit, Fly.io, tag automática) só roda manualmente. Deploy do produto é o Easypanel.
 - Deploy/cutover/smoke: `deploy/*.md`

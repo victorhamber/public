@@ -1,5 +1,5 @@
 # Estado — MASTER
 Atualizado: 2026-11-10
-Feito: marca visível Trajettu (título, ícone, textos, badge); vídeos de demo do Typebot removidos do editor.
-Próximo: subir esta build no Easypanel (a imagem oficial ainda mostra Typebot); menu Publicar / Agendar / WhatsApp.
-Bloqueio: Easypanel sobe `baptistearno/typebot-builder`. OAuth canais Postiz perdido.
+Feito: `main` de github.com/victorhamber/public no Trajettu; CI PartyKit/Fly/tag automática desligada (sem segredos).
+Próximo: Easypanel puxar esse repo; menu Publicar / Agendar / WhatsApp na mesma UI.
+Bloqueio: builder/viewer no ar ainda são a imagem oficial. OAuth canais Postiz perdido.

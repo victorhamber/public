@@ -1,9 +1,8 @@
 name: Create Tag
 
+# Tag automática do Typebot exige CONTENTS_RW_PAT. Fora do deploy Trajettu.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: write
